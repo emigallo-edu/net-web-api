@@ -1,0 +1,38 @@
+﻿@model CalculatorWeb.ViewModels.Home.CalcViewModel;
+
+@using (Html.BeginForm("Calc", "Home", FormMethod.Post))
+{
+    <div>
+        <label id="textLabel">@Model.Result</label>
+        @foreach (List<string> row in Model.Rows)
+        {
+            <div class="row">
+                @foreach (string item in row)
+                {
+                    @if (item != null)
+                    {
+                        if (item == "=")
+                        {
+                            <button type="submit">=</button>
+                        }
+                        else
+                        {
+                            <button type="button" data-value="@item">@item</button>
+                        }
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    <script>window.addEventListener('load', (event) => {
+
+            document.querySelectorAll('button').forEach(function (item) {
+                item.addEventListener('click', (event) => {
+                    document.querySelector('#textLabel').innerHTML += event.target.dataset.value;
+                    console.log(event.target.dataset.value);
+                });
+            });
+
+        });</script>
+}

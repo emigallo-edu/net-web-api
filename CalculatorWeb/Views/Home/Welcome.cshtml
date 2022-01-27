@@ -1,0 +1,28 @@
+﻿@model CalculatorWeb.Models.UserModel
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post))
+{
+    <link href="~/css/welcome.css" rel="stylesheet" /><div>
+        @if (ViewBag.Error != null)
+        {
+            string msj = ViewBag.Error;
+            @Html.Label(msj);
+        }
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Name)
+        @Html.TextBoxFor(model => model.Name, new { @class = "customText" })
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "customText" })
+    </div>
+
+    <div>
+
+        <input type="submit" value="Empezar" />
+
+    </div>
+}
