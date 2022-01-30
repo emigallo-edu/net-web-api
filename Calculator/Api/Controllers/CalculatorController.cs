@@ -1,5 +1,7 @@
 ﻿using System;
+using Api.Context;
 using Api.DTOs;
+using Api.Models;
 using Business.Models;
 using Business.Operations;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,6 @@ namespace Api.Controllers
     {
         public CalculatorController()
         {
-
         }
 
         [HttpGet]
@@ -118,23 +119,6 @@ namespace Api.Controllers
             OperationBase op = new DivideOperation(value2);
             double result = op.CalculateResult(value1);
             return string.Format("El resultado de la cuenta es: {0}", result);
-        }
-
-        [HttpGet]
-        [Route("example")]
-        public string Example()
-        {
-            CalculatorWithHistory calc = new CalculatorWithHistory();
-            calc.Add(4);
-
-            OperationBase add = new AddOperation(3.3);
-            calc.Add(add);
-
-            OperationBase mult = new MultiplyOperation(2.4);
-            calc.Add(mult);
-
-            double result = calc.Do();
-            return string.Format("El resultado de la operación es: {0}", result);
         }
 
         private OperationBase GetOperationById(string id)
