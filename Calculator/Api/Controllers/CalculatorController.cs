@@ -1,5 +1,4 @@
 ﻿using System;
-using Api.Context;
 using Api.DTOs;
 using Api.Models;
 using Business.Models;
@@ -17,9 +16,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public string Default()
+        public ActionResult Default()
         {
-            return "Esta es la API de la calculadora.";
+            WelcomeMessage message = new WelcomeMessage();
+            message.Message = "Esta es la API de la calculadora " + DateTime.Now.ToString();
+            message.Weather = "Sunny";
+            return Ok(message);
         }
 
         [HttpGet]

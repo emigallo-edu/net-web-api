@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Api.Context;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -12,32 +13,37 @@ namespace Api.Controllers
     [Route("login")]
     public class LoginController : ControllerBase
     {
-        private IApiContext _db;
+        private BaseCalculatorDbContext _context;
 
-        public LoginController()
+        public LoginController(BaseCalculatorDbContext context)
         {
-            this._db = ApiContext.Instance;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Create(string name, string email)
-        {
-            LoginModel model = new LoginModel()
-            {
-                Name = name,
-                Email = email,
-                Date = DateTime.Now
-            };
-
-            await this._db.Logins.AddAsync(model);
-            return Ok("El registro se insertó correctamente");
+            this._context = context;
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            List<LoginModel> list = this._db.Logins.ToList();
+            List<LoginModel> list = this._context.Logins.ToList();
             return Ok(list);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Insert(LoginModel model)
+        {
+            try
+            {
+                await this._context.AddAsync(model);
+                if (await this._context.SaveChangesAsync() > 0)
+                {
+                    return Ok("El registro se guardó exitosamente");
+                }
+
+                return Ok("No se pudo guardar el registro");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

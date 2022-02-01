@@ -5,17 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Services\" />
     <None Remove="ViewModels\" />
-    <None Remove="ViewModels\Home\" />
-    <None Remove="Connections\" />
+    <None Remove="Sources\" />
     <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="ViewModels\Home\" />
-    <Folder Include="Connections\" />
+    <Folder Include="Connection\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
