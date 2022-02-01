@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Api.Context;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -24,6 +23,14 @@ namespace Api.Controllers
         public async Task<ActionResult> Get()
         {
             List<LoginModel> list = this._context.Logins.ToList();
+            return Ok(list);
+        }
+
+        [HttpGet]
+        [Route("today")]
+        public async Task<ActionResult> GetToday()
+        {
+            IQueryable<LoginModel> list = this._context.Logins.Where(x => x.Date.Date == DateTime.Today.Date);
             return Ok(list);
         }
 

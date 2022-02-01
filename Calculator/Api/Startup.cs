@@ -26,7 +26,7 @@ namespace Api
                 .UseInMemoryDatabase(databaseName: "CalculatorDatabase")
                 .Options;
 
-            services.AddSingleton<BaseCalculatorDbContext>(x => new InMemoryDbContext(options));
+            services.AddSingleton<BaseCalculatorDbContext>(x => InMemoryDbContext.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
