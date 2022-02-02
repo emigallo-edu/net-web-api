@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Api.Context;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -22,15 +23,18 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            List<LoginModel> list = this._context.Logins.ToList();
+            List<LoginModel> list = await this._context.Logins.ToListAsync();
             return Ok(list);
         }
 
         [HttpGet]
         [Route("today")]
-        public async Task<ActionResult> GetToday()
+        public ActionResult GetToday()
         {
-            IQueryable<LoginModel> list = this._context.Logins.Where(x => x.Date.Date == DateTime.Today.Date); 
+            IQueryable<string> list = this._context.Logins
+                .Where(x => x.Date.Date == DateTime.Today.Date && x.Name != "")
+                .Select(x => x.Email);
+
             return Ok(list);
         }
 
@@ -39,6 +43,21 @@ namespace Api.Controllers
         {
             try
             {
+                //List<LoginModel> demo = new List<LoginModel>();
+
+                //LoginModel toRemove = demo.First(x => x.Id == model.Id);
+                //LoginModel toRemove = demo.Where(x => x.Id == model.Id).First();
+                //demo.Remove(toRemove);
+                //this._context.Logins.FirstOrDefault(x => x.Id == 9999);
+                //this._context.Logins.Skip(1).Take(3);
+
+                //this._context.Remove(model);         
+                //this._context.Remove(model);
+                //await this._context.SaveChangesAsync();
+
+
+
+
                 await this._context.AddAsync(model);
                 if (await this._context.SaveChangesAsync() > 0)
                 {

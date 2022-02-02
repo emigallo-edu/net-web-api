@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CalculatorWeb.Models;
@@ -36,5 +37,26 @@ namespace CalculatorWeb.Connection
 
             return JsonConvert.DeserializeObject<T>(content);
         }
+
+
+        //private List<UserModel> GetFromSql()
+        //{
+        //    SqlCommand sqlCommand = new SqlCommand(sqlConnection, "SELECT * FROM Users WHERE Id > 3");
+
+        //    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+        //    List<UserModel> rett = new List<UserModel>();
+        //    while (reader.Read())
+        //    {
+        //        rett.Add(new UserModel()
+        //        {
+        //            Name = reader.GetString("Name"),
+        //            Email = reader.GetString("Email")
+        //        });
+        //    }
+
+        //     //rett.Where(x => x.Name == "Emiliano");
+        //    return rett;
+        //}
     }
 }

@@ -19,15 +19,23 @@ namespace CalculatorWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            UserModel model = new UserModel();
-            //model.Title = "Hola, bienvenido a la calculadora.";
+            try
+            {
+                UserModel model = new UserModel();
+                //model.Title = "Hola, bienvenido a la calculadora.";
 
-            RestConnection rest = new RestConnection("http://localhost:55000");
+                RestConnection rest = new RestConnection("http://localhost:55000");
 
-            WelcomeMessage result = await rest.GetAsync<WelcomeMessage>("calc");
-            model.Title = result.Message;
+                WelcomeMessage result = await rest.GetAsync<WelcomeMessage>("calc");
+                model.Title = result.Message;
 
-            return View("Welcome", model);
+                return View("Welcome", model);
+            }
+            catch (System.Exception ex)
+            {
+                this._logger.LogError("Error");
+                return BadRequest(ex);
+            }
         }
 
         [HttpPost]
