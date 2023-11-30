@@ -99,6 +99,7 @@ El controlador elige la vista para mostrar al usuario y proporciona cualquier da
 que sea necesario.<br>
 Se entiende por vista un HTML o un JSON con información.
 
+
 ## ¿Qué es una API?
 
 ### Application Programming Interface
@@ -184,3 +185,8 @@ Web API, sino que se pueda consumir la versión local.
 #### Sistema en capas
 El servicio del servidor debe tener una arquitectura de capas donde su evolución sea completamente transparente para el cliente.<br>
 Por ej, si el servicio web va a utilizar un balanceo de carga, los clientes no tienen por qué tener presente ese detalle pues esto debe ser algo completamente transparente para ellos.
+
+## ASP.NET Core MVC
+Es un marco web de código abierto, creado por Microsoft, para crear servicios y aplicaciones web .NET. Es multiplataforma y se ejecuta en Windows, Linux, macOS, y Docker.
+
+[Documentación](https://learn.microsoft.com/es-es/aspnet/core/mvc/overview?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website)
