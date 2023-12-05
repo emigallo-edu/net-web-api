@@ -161,7 +161,7 @@ evitarse los verbos en su construcción.<br>
 Además, las URI siguen una jerarquía lógica de capas que permite ordenar los recursos y
 englobar las distintas funcionalidades entre sí.
 
-QueryString: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas
+QueryString: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas <br>
 QueryPath: https://localhost:7054/WeatherForecast/Freezing/bsas
 
 ### RESTFul
@@ -190,6 +190,9 @@ Web API, sino que se pueda consumir la versión local.
 #### Sistema en capas
 El servicio del servidor debe tener una arquitectura de capas donde su evolución sea completamente transparente para el cliente.<br>
 Por ej, si el servicio web va a utilizar un balanceo de carga, los clientes no tienen por qué tener presente ese detalle pues esto debe ser algo completamente transparente para ellos.
+
+<br>
+<br>
 
 ## ASP.NET Core MVC
 Es un marco web de código abierto, creado por Microsoft, para crear servicios y aplicaciones web .NET. Es multiplataforma y se ejecuta en Windows, Linux, macOS, y Docker.
