@@ -1,0 +1,25 @@
+@enduml
+
+@startuml
+
+skin rose
+
+class Match
+class Club
+class Player
+class Tournament
+class Standing
+class Stadium
+
+Tournament o-down-> "*" Club : Agregation
+Tournament o-down-> "*" Match : Agregation
+Tournament "1" *-down- "1" Standing : Composition
+
+Club o-down-> "*" Player : Agregation
+
+Match ..|> Stadium : Use
+Match -> "2" Club : Asociation
+
+Standing o-down-> "*" Club : Agregation
+
+@enduml
