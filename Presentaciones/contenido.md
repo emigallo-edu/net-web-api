@@ -40,7 +40,7 @@ Por ej, el módulo de cierre centralizado con el módulo de la alarma del auto.
 Es el proceso de estructuración por el que se produce una organización de un conjunto de
 elementos en niveles de responsabilidad.<br>
 
-![](/PPT's/jerarquia.JPG)
+![](/Presentaciones/jerarquia.JPG)
 
 ### Elementos de la POO
 - Clase: descripción de los datos y de las operaciones de un elemento modelado.
@@ -99,6 +99,8 @@ El controlador elige la vista para mostrar al usuario y proporciona cualquier da
 que sea necesario.<br>
 Se entiende por vista un HTML o un JSON con información.
 
+<br>
+<br>
 
 ## ¿Qué es una API?
 
@@ -159,6 +161,9 @@ evitarse los verbos en su construcción.<br>
 Además, las URI siguen una jerarquía lógica de capas que permite ordenar los recursos y
 englobar las distintas funcionalidades entre sí.
 
+QueryString: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas
+QueryPath: https://localhost:7054/WeatherForecast/Freezing/bsas
+
 ### RESTFul
 
 #### Arquitectura cliente-servidor
@@ -191,23 +196,193 @@ Es un marco web de código abierto, creado por Microsoft, para crear servicios y
 
 [Documentación](https://learn.microsoft.com/es-es/aspnet/core/mvc/overview?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website)
 
+<br>
+<br>
 
-## Relación entre clases
+## Relación por colaboración entre clases
+Si dos objetos colaboran, a través del paso de mensajes, sus respectivas clases están relacionadas.
 
 ### Relación de Composición/Agregación
+
+Es la relación que se constituye entre el todo y la parte. Se puede determinar que existe una relación de composición entre la clase A (el todo) y la clase B (la parte), si un objeto de la clase A “tiene un” objeto de la clase B.
+
+La relación de composición no abarca simplemente cuestiones físicas (libro y páginas), como “contiene un” (aparato digestivo y bolo alimenticio). <br>
+Sino también, a relaciones lógicas que respondan adecuadamente al todo y a la parte
+como “posee un” (propietario y propiedades).
+
+
+#### Composición
+- Es una composición donde la vida del objetos de la clase contenida debe coincidir con la vida de la clase contenedor.
+- Los componentes constituyen una parte del objeto compuesto.
+- La supresión del objeto compuesto conlleva la supresión de los componentes.
+- Los componentes no pueden ser compartidos por varios objetos compuestos.
+- Composición fuerte
+
+Clases persona y cabeza: una cabeza solo puede pertenecer a una persona y no puede existir una cabeza sin su persona.
+
+    class Todo {
+        private Parte parte;
+
+        public Todo(){
+            this.parte = new Parte();
+        }
+    }
+
+    class Parte {
+    }
+
+![](/Presentaciones/composicion.svg)
+
+#### Agregación
+- Es una composición donde la vida del objetos de la clase contenida no debe coincidir con la vida de la clase contenedor.
+- Los componentes constituyen opcionalmente una parte del objeto compuesto.
+- La destrucción del compuesto no conlleva la destrucción de los componentes.
+- Los componentes pueden ser compartidos por varios compuestos.
+- Composición débil
+
+Clases persona y familia: un persona puede pertenecer a la familia en que nació y a las que posteriormente formó y seguir vivo aunque ya no existan dichas familias.
+
+    class Agregación {
+        private List<Agregado> agregados;
+
+        public Agregación(){
+            this.agregados = new List<Agregado>();
+        }
+
+        public void Add(Agregado agregado){
+            this.agregados.Add(agregado);
+        }
+
+        public void Remove(Agregado agregado){
+            this.agregados.Remove(agregado);
+        }
+    }
+
+    class Agregado {
+    }
+
+![](/Presentaciones/agregacion.svg)
+
+
 ### Relación de Asociación
+Es la relación que perdura entre un cliente y un servidor determinado.
+
+Existe una relación de asociación entre la clase A, el cliente, y la clase B, el servidor, si un objeto de la clase A disfruta de los servicios de un objeto determinado de la clase B (mensajes lanzados) para llevar a cabo la responsabilidad del objeto de la clase A en diversos momentos creándose una dependencia del objeto servidor.
+
+    class Asociación {
+        private Asociado asociado;
+
+        public Asociación(Asociado asociado){
+            this.Set(asociado);
+        }
+
+        public void Set(Asociado asociado){
+            this.asociado = asociado;
+        }
+    }
+
+    class Asociado {
+    }
+
+![](/Presentaciones/asociacion.svg)
+
 ### Relación de Dependencia/Uso
-### Relaciones entre Clases por Transmisión
+Es la relación que se establece momentáneamente entre un cliente y cualquier servidor.
 
-Torneo de futbol
-- Partido (dia y hora, equipo 1, equipo 2, arbitros, resultado, estadio)
-- Club (nombre)
-- Torneo (clubes, fechas)
-- Fecha torneo (nro, partidos)
-- Tabla de posiciones (equipo, puntos, partidos ganados, empatados y perdidos, posicion)
+Existe una relación de uso entre la clase A, el cliente, y la clase B, el servidor, si un objeto de la clase A disfruta de los servicios de un objeto de la clase B (mensajes lanzados) para llevar a cabo la responsabilidad del objeto de la clase A en un momento dado sin dependencias futuras.
+
+    class Uso {
+
+        public void Metodo(Usado parametro){
+            parametro.HacerAlgo("unValor");
+        }
+    }
+
+    class Usado {
+    }
+
+![](/Presentaciones/uso.svg)
+
+### Comparativa de Relaciones entre Clases por Colaboración
+![](/Presentaciones/comparativaRelaciones.jpg)
+
+## Relaciones por transmisión entre clases
+Si una clase transmite a otra todos sus miembros, atributos y métodos, para organizar una jerarquía de clasificación.
+
+### Relación de Herencia por Extensión
+La clase descendiente implementa todas las operaciones de la clase base, añadiendo o redefiniendo partes especializadas
+
+![](/Presentaciones/herenciaEspecializacion.svg)
 
 
+### Relación de Herencia por Implementación
+La especialización transforma el concepto de la clase base a la clase derivada
 
-QueryString-Get: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas
+![](/Presentaciones/herenciaExtensión.svg)
 
-QueryPath-Delete: https://localhost:7054/WeatherForecast/Freezing/bsas
+<br>
+<br>
+
+## Entity Framework Core
+Entity Framework (EF) Core es una versión ligera, extensible, de código abierto y multiplataforma de la popular tecnología de acceso a datos Entity Framework. <br>
+EF Core puede actuar como asignador relacional de objetos, que se encarga de lo siguiente:
+- Permite a los desarrolladores de .NET trabajar con una base de datos usando objetos .NET.
+- Permite prescindir de la mayor parte del código de acceso a datos que normalmente es necesario escribir.
+
+EF Core es compatible con muchos motores de base de datos; vea Proveedores de bases de datos para más información.
+
+### El modelo
+Con EF Core, el acceso a datos se realiza mediante un modelo. Este se compone de clases de entidad y un objeto de contexto que representa una sesión con la base de datos. Este objeto de contexto permite consultar y guardar datos.
+
+[Documentación](https://learn.microsoft.com/es-es/ef/core)
+
+### DbContext
+Al desarrollar con el flujo de trabajo Code First, se define un DbContext derivado que representa la sesión con la base de datos y expone un DbSet para cada tipo del modelo. En este tema se describen las distintas formas de definir las propiedades de DbSet.
+
+El caso común que se muestra en los ejemplos de Code First es tener DbContext con propiedades DbSet automáticas públicas para los tipos de entidad del modelo.
+
+    public class BloggingContext : DbContext
+    {
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Post> Posts { get; set; }
+    }
+
+### Consultas
+Las instancias de las clases de entidad se recuperan de la base de datos por medio de Language Integrated Query (LINQ). 
+
+    using (var db = new BloggingContext())
+    {
+        var blogs = db.Blogs
+            .Where(b => b.Rating > 3)
+            .OrderBy(b => b.Url)
+            .ToList();
+    }
+
+### Language-Integrated Query (LINQ)
+Es un conjunto de tecnologías basadas en la integración de capacidades de consulta directamente en el lenguaje C#. Tradicionalmente, las consultas con datos se expresaban como cadenas simples sin comprobación de tipos en tiempo de compilación ni compatibilidad con IntelliSense.
+
+La parte más visible de "lenguaje integrado" de LINQ es la expresión de consulta. Las expresiones de consulta se escriben con una sintaxis de consulta declarativa. Con la sintaxis de consulta, puede realizar operaciones de filtrado, ordenación y agrupamiento en orígenes de datos con el mínimo código.
+
+    int[] scores = { 97, 92, 81, 60 };
+
+    IEnumerable<int> scoreQuery =
+        from score in scores
+        where score > 80
+        select score;
+
+    foreach (int i in scoreQuery)
+    {
+        Console.Write(i + " ");
+    }
+
+    // Output: 97 92 81
+
+### Guardado de datos
+Los datos se crean, se eliminan y se modifican en la base de datos mediante instancias de las clases de entidad
+
+    using (var db = new BloggingContext())
+    {
+        var blog = new Blog { Url = "http://sample.com" };
+        db.Blogs.Add(blog);
+        db.SaveChanges();
+    }
