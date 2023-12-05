@@ -1,0 +1,26 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.config
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+.vs
+Packages/
+
+/Prep.Rest/Logs
+/Prep.Rest/App.Debug-TS.config
+/Prep.Rest/App.Release-TS.config
+/Prep.Rest/appsettings.json

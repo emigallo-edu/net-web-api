@@ -190,3 +190,24 @@ Por ej, si el servicio web va a utilizar un balanceo de carga, los clientes no t
 Es un marco web de código abierto, creado por Microsoft, para crear servicios y aplicaciones web .NET. Es multiplataforma y se ejecuta en Windows, Linux, macOS, y Docker.
 
 [Documentación](https://learn.microsoft.com/es-es/aspnet/core/mvc/overview?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website)
+
+
+## Relación entre clases
+
+### Relación de Composición/Agregación
+### Relación de Asociación
+### Relación de Dependencia/Uso
+### Relaciones entre Clases por Transmisión
+
+Torneo de futbol
+- Partido (dia y hora, equipo 1, equipo 2, arbitros, resultado, estadio)
+- Club (nombre)
+- Torneo (clubes, fechas)
+- Fecha torneo (nro, partidos)
+- Tabla de posiciones (equipo, puntos, partidos ganados, empatados y perdidos, posicion)
+
+
+
+QueryString-Get: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas
+
+QueryPath-Delete: https://localhost:7054/WeatherForecast/Freezing/bsas
