@@ -1,0 +1,6 @@
+Torneo de futbol
+- Partido (dia y hora, equipo 1, equipo 2, arbitros, resultado, estadio)
+- Club (nombre)
+- Torneo (clubes, fechas)
+- Fecha torneo (nro, partidos)
+- Tabla de posiciones (equipo, puntos, partidos ganados, empatados y perdidos, posicion)
