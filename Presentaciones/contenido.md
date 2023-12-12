@@ -161,6 +161,8 @@ evitarse los verbos en su construcción.<br>
 Además, las URI siguen una jerarquía lógica de capas que permite ordenar los recursos y
 englobar las distintas funcionalidades entre sí.
 
+Un endpoint es un puerto de comunicaciones empleado para realizar llamadas a procedimientos remotos. Podemos decir que los endpoints son las URL's que reciben o retornan información de un Web API.
+
 QueryString: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas <br>
 QueryPath: https://localhost:7054/WeatherForecast/Freezing/bsas
 
@@ -381,7 +383,10 @@ La parte más visible de "lenguaje integrado" de LINQ es la expresión de consul
     // Output: 97 92 81
 
 ### Guardado de datos
-Los datos se crean, se eliminan y se modifican en la base de datos mediante instancias de las clases de entidad
+
+#### Enfoque 1: seguimiento de cambios y SaveChanges
+Los datos se crean, se eliminan y se modifican en la base de datos mediante instancias de las clases de entidad.<br>
+En muchos escenarios, el programa debe consultar algunos datos de la base de datos, realizar alguna modificación en ella y volver a guardar las modificaciones; esto a veces se conoce como "unidad de trabajo".
 
     using (var db = new BloggingContext())
     {
@@ -389,3 +394,57 @@ Los datos se crean, se eliminan y se modifican en la base de datos mediante inst
         db.Blogs.Add(blog);
         db.SaveChanges();
     }
+
+Lo anterior describe una operación de actualización típica de los datos existentes, pero los principios similares abogan por agregar y quitar entidades. Interactúe con el control de cambios de EF mediante una llamada a DbSet<TEntity>.Add y Remove, que supondrá el seguimiento de los cambios. A continuación, EF aplica todos los cambios realizados en la base de datos cuando se llama a SaveChanges() (por ejemplo, a través de SQL INSERT y DELETE cuando se usa una base de datos relacional).
+
+#### Enfoque 2: ExecuteUpdate y ExecuteDelete ("actualización masiva")
+Aunque el seguimiento de cambios y SaveChanges() son una manera eficaz de guardar los cambios, tienen ciertas desventajas.
+
+En primer lugar, SaveChanges() requiere que consulte y realice un seguimiento de todas las entidades que vayan a modificar o eliminar. Si necesita, por ejemplo, eliminar todos los blogs con clasificación por debajo de un umbral determinado, debe consultar, materializar y realizar el seguimiento de un número quizá enorme de filas y que SaveChanges() genere una instrucción DELETE para cada una de ellas. Las bases de datos relacionales proporcionan una alternativa mucho más eficaz: se puede enviar un solo comando DELETE, especificando las filas que se van a eliminar con una cláusula WHERE, pero el modelo SaveChanges() no permite generarlo.
+
+    using (var db = new BloggingContext())
+    {
+        context.Blogs.Where(b => b.Rating < 3).ExecuteDelete();
+    }
+
+Esto permite expresar una instrucción SQL DELETE a través de operadores LINQ normales, como una consulta LINQ normal, lo que hace que se ejecute el siguiente código SQL en la base de datos:
+
+    DELETE FROM [b]
+    FROM [Blogs] AS [b]
+    WHERE [b].[Rating] < 3
+
+[Documentación](https://learn.microsoft.com/es-es/ef/core/saving)
+
+### Creación y configuración de un modelo
+
+#### Uso de la API fluida para configurar un modelo
+Puede reemplazar el método OnModelCreating del contexto derivado y usar API fluida para configurar el modelo. Este es el método más eficaz de configuración y permite especificar la configuración sin modificar las clases de entidad. La configuración de API fluida tiene la prioridad más alta y reemplaza las anotaciones de datos y las convenciones.
+
+    using Microsoft.EntityFrameworkCore;
+
+    namespace EFModeling.EntityProperties.FluentAPI.Required;
+
+    internal class MyContext : DbContext
+    {
+        public DbSet<Blog> Blogs { get; set; }
+
+        #region Required
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Blog>()
+                .Property(b => b.Url)
+                .IsRequired();
+        }
+        #endregion
+    }
+
+    public class Blog
+    {
+        public int BlogId { get; set; }
+        public string Url { get; set; }
+    }
+
+#### Uso de anotaciones de datos para configurar un modelo
+También puede aplicar determinados atributos (conocidos como anotaciones de datos) a las clases y propiedades. Las anotaciones de datos reemplazarán a las convenciones, pero la configuración de la API fluida también las reemplazará.
+
+[Documentación](https://learn.microsoft.com/es-es/ef/core/modeling)
