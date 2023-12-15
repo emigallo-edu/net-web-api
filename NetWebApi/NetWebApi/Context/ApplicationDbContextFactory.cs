@@ -29,4 +29,32 @@ namespace NetWebApi.Context
             return configuration.GetConnectionString("DefaultConnectionString");
         }
     }
+
+    public static class ApplicationDbContextFactoryConfig
+    {
+        public static void AddApplicationDbContext(this IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(
+                options => options.Config());
+        }
+
+        public static void Config(this DbContextOptionsBuilder contextOptionsBuilder)
+        {
+            string connectionString = GetConnectionString();
+            contextOptionsBuilder.UseSqlServer(connectionString, x =>
+               x.MigrationsHistoryTable("_MigrationsHistory", "dbo")
+               .CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
+        }
+
+        private static string GetConnectionString()
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false, true);
+
+            var configuration = configurationBuilder.Build();
+
+            return configuration.GetConnectionString("DefaultConnectionString");
+        }
+    }
 }
