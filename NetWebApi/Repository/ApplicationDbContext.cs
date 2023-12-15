@@ -15,13 +15,15 @@ namespace Repository
         }
 
         public DbSet<TestingClass> TestingClasses { get; set; }
+        public DbSet<Club> Clubs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
-            base.OnModelCreating(mb);
-            mb.Entity<TestingClass>()
-                .Property(x => x.Id)
-                .ValueGeneratedNever();
+            mb.ConfigClub();
+            mb.ConfigPlayer();
+            mb.ConfigMatch();
+            mb.ConfigStadium();
+            mb.ConfigTournament();
         }
     }
 }

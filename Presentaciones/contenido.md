@@ -448,3 +448,69 @@ Puede reemplazar el método OnModelCreating del contexto derivado y usar API flu
 También puede aplicar determinados atributos (conocidos como anotaciones de datos) a las clases y propiedades. Las anotaciones de datos reemplazarán a las convenciones, pero la configuración de la API fluida también las reemplazará.
 
 [Documentación](https://learn.microsoft.com/es-es/ef/core/modeling)
+
+## Asincronismo
+
+- Definición de sincronismo según RAE: Dicho de un proceso o de su efecto: Que se desarrolla en perfecta correspondencia temporal con otro proceso o causa. 
+- Definición de asincronismo según RAE: Que carece de sincornismo.<br>
+- Definición de simultáneo según RAE: Dicho de una cosa: Que se hace u ocurre al mismo tiempo que otra.
+
+### ¿Qué es la Programación Sincrónica?
+Es una técnica que se utiliza para que las computadoras realicen tareas paso a paso, en el orden en que se les dan las instrucciones.
+
+La computadora completará cada tarea antes de pasar a la siguiente. Esto hace que sea fácil de entender y de predecir lo que la computadora hará en cualquier momento dado.
+
+![](/Presentaciones/sincronismo.png)
+
+Sin embargo, la programación sincrónica puede ser problemática en ciertas situaciones, especialmente cuando se trata de tareas que requieren una cantidad significativa de tiempo para completarse.
+
+Por ejemplo, supongamos que un programa sincrónico realiza una tarea que requiere esperar una respuesta de un servidor remoto. El programa quedará a la espera de la respuesta y no podrá hacer nada más hasta que se devuelva la respuesta. Esto se conoce como bloqueo y puede hacer que una aplicación no responda o aparezca como "congelada" para el usuario.
+
+### ¿Qué es la Programación Asincrónica?
+Es una forma en que un programa de computadora gestiona múltiples tareas simultáneamente en lugar de ejecutarlas una tras otra.
+
+![](/Presentaciones/asincronismo.png)
+
+La programación asíncrona permite que un programa continúe trabajando en otras tareas mientras espera que ocurran eventos externos, como solicitudes de red. Este enfoque puede mejorar enormemente el rendimiento y la capacidad de respuesta de un programa.
+
+Por ejemplo, mientras un programa recupera los datos de un servidor remoto, puede seguir ejecutando otras tareas como responder a las entradas del usuario.
+
+[Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/asynchronous-programming/)
+
+### Task, await, async
+Si tiene cualquier necesidad ligada a E/S (por ejemplo, solicitar datos de una red, acceder a una base de datos o leer y escribir un sistema de archivos), deberá usar la programación asincrónica. También podría tener código ligado a la CPU, como realizar un cálculo costoso, que también es un buen escenario para escribir código asincrónico.
+
+C# tiene un modelo de programación asincrónico de nivel de lenguaje que permite escribir fácilmente código asincrónico sin tener que hacer malabares con las devoluciones de llamada o ajustarse a una biblioteca que admita la asincronía. Sigue lo que se conoce como el modelo asincrónico basado en tareas (TAP).
+
+El núcleo de la programación asincrónica son los objetos Task y Task\<T>, que modelan las operaciones asincrónicas. Son compatibles con las palabras clave async y await. El modelo es bastante sencillo en la mayoría de los casos:
+
+- Para el código ligado a E/S, espera una operación que devuelva Task o Task\<T> dentro de un método async.
+- Para el código ligado a la CPU, espera una operación que se inicia en un subproceso en segundo plano con el método Task.Run.
+
+La palabra clave await es donde ocurre la magia. Genera control para el autor de la llamada del método que ha realizado await, y permite en última instancia una interfaz de usuario con capacidad de respuesta o un servicio flexible.
+
+
+### Piezas clave que debe comprender
+- El código asincrónico puede usarse para código tanto ligado a E/S como ligado a la CPU, pero de forma distinta en cada escenario.
+- El código asincrónico usa Task y Task\<T>, que son construcciones que se usan para modelar el trabajo que se realiza en segundo plano.
+- La palabra clave async convierte un método en un método asincrónico, lo que permite usar la palabra clave await en su cuerpo.
+- Cuando se aplica la palabra clave await, se suspende el método de llamada y se cede el control al autor de la llamada hasta que se completa la tarea esperada.
+- await solo puede usarse dentro de un método asincrónico.
+
+
+### Reconocer el trabajo ligado a la CPU y el ligado a E/S
+Resulta fundamental que pueda identificar si el trabajo que debe realizar está ligado a E/S o a la CPU, ya que esto puede afectar en gran medida al rendimiento del código y podría dar lugar al uso inadecuado de ciertas construcciones.
+
+A continuación, se indican dos preguntas que debe hacerse antes de escribir el código:
+
+- ¿Estará su código "esperando" algo, como datos de una base de datos?
+
+  - Si la respuesta es "sí", su trabajo está enlazado a E/S.
+
+- ¿Realizará el código un cálculo costoso?
+
+    - Si la respuesta es "sí", su trabajo está enlazado a la CPU.
+
+Si el trabajo que tiene está ligado a E/S, use async y await sin Task.Run.
+
+Si el trabajo que tiene está ligado a la CPU y le interesa la capacidad de respuesta, use async y await, pero genere el trabajo en otro subproceso con Task.Run. Si el trabajo es adecuado para la simultaneidad y el paralelismo, también debe plantearse el uso de la biblioteca TPL.

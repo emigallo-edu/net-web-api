@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model.Entities
+﻿namespace Model.Entities
 {
     public class Standing
     {
-        private ICollection<Club> clubs;
-
         public Standing()
         {
-            clubs = new List<Club>();
+            Clubs = new List<Club>();
         }
+
+        public int Id { get; set; }
+        public int TournamentId { get; set; }
+
+        public Tournament Tournament { get; set; }
+        public ICollection<Club> Clubs { get; set; }
 
         public void AddClub(Club club)
         {
-            clubs.Add(club);
+            Clubs.Add(club);
         }
     }
 }
