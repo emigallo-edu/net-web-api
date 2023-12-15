@@ -17,5 +17,10 @@
         {
             this.players.Add(player);
         }
+
+        public bool IsFromBuenosAires()
+        {
+            return this.City == "BsAs";
+        }
     }
 }

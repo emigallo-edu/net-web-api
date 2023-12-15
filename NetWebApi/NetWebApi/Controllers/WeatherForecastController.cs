@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Model.Entities;
+using NetWebApi.Utils;
 using System.Diagnostics.CodeAnalysis;
 
 namespace NetWebApi.Controllers
@@ -98,6 +99,14 @@ namespace NetWebApi.Controllers
             List<Club> result1 = clubs
                 .Where(Filter)
                 .ToList();
+
+            List<Club> result2 = clubs
+               .Where(x=>x.IsFromBuenosAires())
+               .ToList();
+
+            List<Club> result3 = clubs
+             .WhereExtension(x => x.IsFromBuenosAiresExtensions("Nombre"))
+             .ToList();
 
             return Ok(result);
         }
