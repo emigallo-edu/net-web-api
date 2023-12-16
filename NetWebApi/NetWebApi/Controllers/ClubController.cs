@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Model.Entities;
 using Repository;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetWebApi.Controllers
 {
@@ -26,6 +27,8 @@ namespace NetWebApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await this._repository.GetAll();
+
+            result.First().Stadium.Club = null;
             return Ok(result);
         }
     }

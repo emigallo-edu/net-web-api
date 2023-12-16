@@ -17,6 +17,7 @@ namespace Repository
             using (var context = new ApplicationDbContext(this._options))
             {
                 return await context.Clubs
+                    .Include(x=>x.Stadium)
                     .ToListAsync();
             }
         }
