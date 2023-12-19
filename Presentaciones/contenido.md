@@ -1,6 +1,6 @@
 # WebAPI
 
-## Introducción
+## Introducción <name>
 
 ### ¿Qué es la programación orientada a objetos (POO)?
 Es un paradigma de programación. En el que los objetos se utilizan como metáfora para
@@ -514,3 +514,31 @@ A continuación, se indican dos preguntas que debe hacerse antes de escribir el 
 Si el trabajo que tiene está ligado a E/S, use async y await sin Task.Run.
 
 Si el trabajo que tiene está ligado a la CPU y le interesa la capacidad de respuesta, use async y await, pero genere el trabajo en otro subproceso con Task.Run. Si el trabajo es adecuado para la simultaneidad y el paralelismo, también debe plantearse el uso de la biblioteca TPL.
+
+## Acoplamiento
+Es una medida de la fuerza que un elemento está conectado a otros elementos. Estos elementos incluyen sistemas, paquetes, clases y métodos.
+
+Acoplamiento bajo: no es dependiente de muchos elementos.<br>
+Nos aporta:
+- Fluidez: porque es fácil de comprender
+- Flexible: porque es fácil de modificar
+- Reusable: porque es fácil de reutilizar
+- Robusta: porque no está constantemente afectada por el cambio
+
+Alto acoplamiento: es el acoplamiento a elementos que son inestables en alguna dimensión, como su interfaz, su implementación, o su mera presencia.
+
+Con elementos estables y generalizados rara vez es un problema. El alto acoplamiento per se no es el problema.
+
+## Inversión de control a inyección de dependencias
+La inversión de control es un principio de programación que invierte el flujo de control en una aplicación. En la programación orientada a procesos tradicional, el código que controla la ejecución del programa (la función principal) crea instancias de clases, llama a métodos e incluso solicita información al usuario para que la ejecución pueda continuar y el programa pueda realizar su tarea. IoC es un marco que crea instancias, llama a métodos y desencadena acciones del usuario, teniendo control total del flujo y eliminando esta responsabilidad de la función principal y, en consecuencia, de la aplicación.
+
+La inyección de dependencias (DI) es una técnica de diseño de software en la que la creación y vinculación de dependencias se realiza fuera de la clase dependiente. Posteriormente dichas dependencias se proporcionan ya instanciadas y listas para ser utilizadas, de ahí el término “inyección”; en contraste con la clase dependiente que tiene que crear instancias de sus dependencias internamente y tener que saber cómo configurarlas, lo que provoca el acoplamiento.
+
+Si encontró que el párrafo anterior es redundante con respecto al párrafo anterior, no es por casualidad. Inyección de dependencia fue el nombre acuñado por Martin Fowler en 2004 para tener un nombre mejor y más específico para este estilo, a diferencia del término demasiado genérico Inversión de control utilizado por muchos marcos.
+
+La DI se puede lograr de 3 maneras:
+- Inyección de constructor: cuando las dependencias se proporcionan a través del constructor de la clase dependiente
+- Inyección de interfaz: cuando las dependencias se proporcionan directamente en un método de clase dependiente como argumento
+- Inyección de definidor: cuando las dependencias se proporcionan a través de una propiedad pública de la clase dependiente
+
+[Fuente](https://medium.com/ssense-tech/dependency-injection-vs-dependency-inversion-vs-inversion-of-control-lets-set-the-record-straight-5dc818dc32d1#:~:text=The%20Inversion%20of%20Control%20is,dependencies%20to%20an%20application's%20class.)

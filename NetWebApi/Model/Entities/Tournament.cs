@@ -9,8 +9,8 @@
         }
 
         public int Id { get; set; }
-        public int StandingId { get; set; }
-
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
         public Standing Standing { get; set; }
         public ICollection<Match> Matches { get; set; }
 

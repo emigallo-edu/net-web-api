@@ -12,8 +12,8 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231215223745_CreateTables")]
-    partial class CreateTables
+    [Migration("20231219224148_MigrateData")]
+    partial class MigrateData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,31 +159,46 @@ namespace Repository.Migrations
                     b.Property<int>("TournamentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TournamentId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TournamentId1");
+                    b.HasIndex("TournamentId")
+                        .IsUnique();
 
-                    b.ToTable("Standing");
+                    b.ToTable("Standings", "dbo");
                 });
 
-            modelBuilder.Entity("Model.Entities.TestingClass", b =>
+            modelBuilder.Entity("Model.Entities.StandingClub", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("ClubId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Draw")
+                        .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Loss")
+                        .HasColumnType("int");
 
-                    b.ToTable("TestingClasses");
+                    b.Property<int>("MatchsPlayed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Scoring")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Win")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id", "ClubId");
+
+                    b.HasIndex("ClubId")
+                        .IsUnique();
+
+                    b.ToTable("StandingClubs", "dbo");
                 });
 
             modelBuilder.Entity("Model.Entities.Tournament", b =>
@@ -194,13 +209,13 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("StandingId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StandingId")
-                        .IsUnique();
 
                     b.ToTable("Tournaments", "dbo");
                 });
@@ -214,7 +229,8 @@ namespace Repository.Migrations
 
                     b.HasOne("Model.Entities.Standing", null)
                         .WithMany("Clubs")
-                        .HasForeignKey("StandingId");
+                        .HasForeignKey("StandingId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Stadium");
                 });
@@ -256,23 +272,23 @@ namespace Repository.Migrations
             modelBuilder.Entity("Model.Entities.Standing", b =>
                 {
                     b.HasOne("Model.Entities.Tournament", "Tournament")
-                        .WithMany()
-                        .HasForeignKey("TournamentId1")
+                        .WithOne("Standing")
+                        .HasForeignKey("Model.Entities.Standing", "TournamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Tournament");
                 });
 
-            modelBuilder.Entity("Model.Entities.Tournament", b =>
+            modelBuilder.Entity("Model.Entities.StandingClub", b =>
                 {
-                    b.HasOne("Model.Entities.Standing", "Standing")
+                    b.HasOne("Model.Entities.Club", "Club")
                         .WithOne()
-                        .HasForeignKey("Model.Entities.Tournament", "StandingId")
+                        .HasForeignKey("Model.Entities.StandingClub", "ClubId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Standing");
+                    b.Navigation("Club");
                 });
 
             modelBuilder.Entity("Model.Entities.Club", b =>
@@ -294,6 +310,9 @@ namespace Repository.Migrations
             modelBuilder.Entity("Model.Entities.Tournament", b =>
                 {
                     b.Navigation("Matches");
+
+                    b.Navigation("Standing")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

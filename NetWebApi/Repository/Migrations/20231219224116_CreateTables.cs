@@ -29,16 +29,39 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestingClasses",
+                name: "Tournaments",
+                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    End = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestingClasses", x => x.Id);
+                    table.PrimaryKey("PK_Tournaments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Standings",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Standings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Standings_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalSchema: "dbo",
+                        principalTable: "Tournaments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,27 +91,11 @@ namespace Repository.Migrations
                         principalTable: "Stadiums",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Players",
-                schema: "dbo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ClubId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Players", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Players_Clubs_ClubId",
-                        column: x => x.ClubId,
+                        name: "FK_Clubs_Standings_StandingId",
+                        column: x => x.StandingId,
                         principalSchema: "dbo",
-                        principalTable: "Clubs",
+                        principalTable: "Standings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -122,38 +129,59 @@ namespace Repository.Migrations
                         principalTable: "Clubs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Matchs_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalSchema: "dbo",
+                        principalTable: "Tournaments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Standing",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TournamentId = table.Column<int>(type: "int", nullable: false),
-                    TournamentId1 = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Standing", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tournaments",
+                name: "Players",
                 schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StandingId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClubId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tournaments", x => x.Id);
+                    table.PrimaryKey("PK_Players", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tournaments_Standing_StandingId",
-                        column: x => x.StandingId,
-                        principalTable: "Standing",
+                        name: "FK_Players_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalSchema: "dbo",
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StandingClubs",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    ClubId = table.Column<int>(type: "int", nullable: false),
+                    Position = table.Column<int>(type: "int", nullable: false),
+                    MatchsPlayed = table.Column<int>(type: "int", nullable: false),
+                    Win = table.Column<int>(type: "int", nullable: false),
+                    Draw = table.Column<int>(type: "int", nullable: false),
+                    Loss = table.Column<int>(type: "int", nullable: false),
+                    Scoring = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StandingClubs", x => new { x.Id, x.ClubId });
+                    table.ForeignKey(
+                        name: "FK_StandingClubs_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalSchema: "dbo",
+                        principalTable: "Clubs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -197,52 +225,23 @@ namespace Repository.Migrations
                 column: "ClubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Standing_TournamentId1",
-                table: "Standing",
-                column: "TournamentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tournaments_StandingId",
+                name: "IX_StandingClubs_ClubId",
                 schema: "dbo",
-                table: "Tournaments",
-                column: "StandingId",
+                table: "StandingClubs",
+                column: "ClubId",
                 unique: true);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Clubs_Standing_StandingId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Standings_TournamentId",
                 schema: "dbo",
-                table: "Clubs",
-                column: "StandingId",
-                principalTable: "Standing",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Matchs_Tournaments_TournamentId",
-                schema: "dbo",
-                table: "Matchs",
+                table: "Standings",
                 column: "TournamentId",
-                principalSchema: "dbo",
-                principalTable: "Tournaments",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Standing_Tournaments_TournamentId1",
-                table: "Standing",
-                column: "TournamentId1",
-                principalSchema: "dbo",
-                principalTable: "Tournaments",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Tournaments_Standing_StandingId",
-                schema: "dbo",
-                table: "Tournaments");
-
             migrationBuilder.DropTable(
                 name: "Matchs",
                 schema: "dbo");
@@ -252,7 +251,8 @@ namespace Repository.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "TestingClasses");
+                name: "StandingClubs",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
                 name: "Clubs",
@@ -263,7 +263,8 @@ namespace Repository.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Standing");
+                name: "Standings",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
                 name: "Tournaments",

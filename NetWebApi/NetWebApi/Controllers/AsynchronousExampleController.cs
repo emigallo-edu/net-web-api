@@ -11,7 +11,7 @@ namespace NetWebApi.Controllers
         public async Task<IActionResult> GetWithAwait()
         {
             AsynchronousExample example = new AsynchronousExample();
-            List<string> result = new List<string>();
+
             await example.PerformStep1Async();
             await example.PerformStep2Async();
             await example.PerformStep3Async();

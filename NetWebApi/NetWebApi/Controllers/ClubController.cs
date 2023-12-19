@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Model;
 using Model.Entities;
-using Repository;
-using System.ComponentModel.DataAnnotations;
 
 namespace NetWebApi.Controllers
 {
@@ -10,11 +8,11 @@ namespace NetWebApi.Controllers
     [Route("[controller]")]
     public class ClubController : ControllerBase
     {
-        private readonly ClubRepository _repository;
+        private readonly IClubRepository _repository;
 
-        public ClubController(DbContextOptions<ApplicationDbContext> options)
+        public ClubController(IClubRepository repository)
         {
-            this._repository = new ClubRepository(options);
+            this._repository = repository;
         }
 
         [HttpPost]
@@ -26,9 +24,13 @@ namespace NetWebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await this._repository.GetAll();
+            var result = await this._repository.GetAllAsync();
 
-            result.First().Stadium.Club = null;
+            foreach (var item in result.Where(x => x.Stadium != null))
+            {
+                item.Stadium.Club = null;
+            }
+
             return Ok(result);
         }
     }

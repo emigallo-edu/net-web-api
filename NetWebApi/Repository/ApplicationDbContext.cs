@@ -14,7 +14,6 @@ namespace Repository
         {
         }
 
-        public DbSet<TestingClass> TestingClasses { get; set; }
         public DbSet<Club> Clubs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
@@ -24,6 +23,8 @@ namespace Repository
             mb.ConfigMatch();
             mb.ConfigStadium();
             mb.ConfigTournament();
+            mb.ConfigStanding();
+            mb.ConfigureStandingClub();
         }
 
         // Pasos para trabajar con EF + migraciones
@@ -37,7 +38,7 @@ namespace Repository
 
         // Para des-impactar un (o varias) migracion(es) ya impactada(s) en la DB
         //      Update-Database {nombre de la migración en la cual queremos dejar el estado de la DB} -StartUpProject NetWebApi -Project Repository -Context ApplicationDbContext -Migration {nombre}
-    
+
         // Para hacer un Remove-Migration, no debe estar impactada en la DB
     }
 }

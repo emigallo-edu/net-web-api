@@ -1,4 +1,6 @@
+using Model;
 using NetWebApi.Context;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationDbContext();
+//builder.Services.AddScoped<IClubRepository, ClubFileRepository>((Iservicepri) => new ClubFileRepository(Path.Combine(Environment.CurrentDirectory, "Files")));
+builder.Services.AddScoped<IClubRepository, ClubDbRepository>();
 
 var app = builder.Build();
 
