@@ -10,7 +10,7 @@ namespace Repository.Migrations
             int tournamentId = 980;
             int standingId = 4839;
             int minClubId = 5;
-            int maxClubId = 6;
+            int maxClubId = 10;
 
             InsertTournament(mb, tournamentId);
             InsertStanding(mb, standingId, tournamentId);
@@ -33,7 +33,7 @@ namespace Repository.Migrations
         {
             string query = "SET IDENTITY_INSERT Clubs ON;";
             query += $"INSERT INTO Clubs (Id, Name, Birthday, City, Email, NumberOfPartners, Phone, Address)" +
-               $"VALUES ({clubId}, '{Faker.Company.Name()}', GETDATE(), '{Faker.Address.City()}', 'club1@mail.com', {new Random().Next(1, 15849)}, '{Faker.Phone.Number()}', '{Faker.Address.StreetAddress}')";
+               $"VALUES ({clubId}, '{GetFakedName()}', GETDATE(), '{Faker.Address.City()}', 'club1@mail.com', {new Random().Next(1, 15849)}, '{Faker.Phone.Number()}', '{Faker.Address.StreetAddress}')";
             query += "SET IDENTITY_INSERT Clubs OFF;";
 
             mb.Sql(query);
@@ -52,7 +52,7 @@ namespace Repository.Migrations
             for (int i = 1; i <= 23; i++)
             {
                 string query = $"INSERT INTO Players (Name, Birthday, ClubId)" +
-                    $"VALUES ('{Faker.Name.FullName()}', GETDATE(), {clubId})";
+                    $"VALUES ('{GetFakedName()}', GETDATE(), {clubId})";
                 mb.Sql(query);
             }
         }
@@ -60,7 +60,7 @@ namespace Repository.Migrations
         private static void InsertStadiums(MigrationBuilder mb, int clubId)
         {
             string query = $"INSERT INTO Stadiums (Name, Capacity, ClubId)" +
-                $"VALUES('{Faker.Company.Name()}', {new Random().Next(1, 5849)}, {clubId})";
+                $"VALUES('{GetFakedName()}', {new Random().Next(1, 5849)}, {clubId})";
             mb.Sql(query);
         }
 
@@ -100,6 +100,11 @@ namespace Repository.Migrations
                     DELETE FROM StandingClubs
                     DELETE FROM Clubs
                     DELETE FROM Tournaments");
+        }
+
+        private static string GetFakedName()
+        {
+            return Faker.Company.Name().Replace("'", "");
         }
     }
 }
