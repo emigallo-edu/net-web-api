@@ -33,7 +33,7 @@ namespace Repository.Migrations
         {
             string query = "SET IDENTITY_INSERT Clubs ON;";
             query += $"INSERT INTO Clubs (Id, Name, Birthday, City, Email, NumberOfPartners, Phone, Address)" +
-               $"VALUES ({clubId}, '{GetFakedName()}', GETDATE(), '{Faker.Address.City()}', 'club1@mail.com', {new Random().Next(1, 15849)}, '{Faker.Phone.Number()}', '{Faker.Address.StreetAddress}')";
+               $"VALUES ({clubId}, '{GetFakedName()}', GETDATE(), '{Faker.Address.City()}', 'club1@mail.com', {new Random().Next(1, 15849)}, '{Faker.Phone.Number()}', '{Faker.Address.StreetAddress()}')";
             query += "SET IDENTITY_INSERT Clubs OFF;";
 
             mb.Sql(query);

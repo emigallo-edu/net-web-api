@@ -542,3 +542,79 @@ La DI se puede lograr de 3 maneras:
 - Inyección de definidor: cuando las dependencias se proporcionan a través de una propiedad pública de la clase dependiente
 
 [Fuente](https://medium.com/ssense-tech/dependency-injection-vs-dependency-inversion-vs-inversion-of-control-lets-set-the-record-straight-5dc818dc32d1#:~:text=The%20Inversion%20of%20Control%20is,dependencies%20to%20an%20application's%20class.)
+
+## Delegados
+Un delegado es un tipo que representa referencias a métodos con una lista de parámetros determinada y un tipo de valor devuelto. Cuando se crea una instancia de un delegado, puede asociar su instancia a cualquier método mediante una firma compatible y un tipo de valor devuelto. Puede invocar (o llamar) al método a través de la instancia del delegado.
+
+Los delegados se utilizan para pasar métodos como argumentos a otros métodos. Los controladores de eventos no son más que métodos que se invocan a través de delegados. Cree un método personalizado y una clase, como un control de Windows, podrá llamar al método cuando se produzca un determinado evento.
+
+    public delegate int PerformCalculation(int x, int y);
+
+[Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/programming-guide/delegates/)
+
+## Middleware de ASP.NET Core
+Es un software que se ensambla en un pipeline de una aplicación para controlar las solicitudes y las respuestas.
+
+Cada componente puede hacer lo siguiente:
+
+- Elegir si se pasa la solicitud al siguiente componente del pipeline.
+- Realizar trabajos antes y después del siguiente componente del pipeline.
+
+Los delegados de solicitudes se usan para crear el pipeline de solicitudes. Estos también controlan las solicitudes HTTP.
+
+Los delegados de solicitudes se configuran con los métodos de extensión Run, Map y Use. Un delegado de solicitudes se puede especificar en línea como un método anónimo (denominado middleware en línea) o se puede definir en una clase reutilizable. Estas clases reutilizables y métodos anónimos en línea se conocen como software intermedio o componentes de software intermedio. Cada componente de software intermedio del pipeline de solicitudes es responsable de invocar el siguiente componente del pipeline o de interrumpir la canalización, en caso de ser necesario. Cuando un middleware se interrumpe, se llama middleware de terminal porque impide el procesamiento de la solicitud por parte de middleware adicional.
+
+El pipeline de solicitudes de ASP.NET Core consiste en una secuencia de delegados de solicitud a los que se llama de uno en uno. En el siguiente diagrama se muestra este concepto. El subproceso de ejecución sigue las flechas negras.
+
+![](/Presentaciones/request-delegate-pipeline.png)
+
+
+Encadene varios delegados de solicitudes con Use. El parámetro next representa el siguiente delegado de la canalización. Si no llama al next parámetro, puede interrumpir el pipeline. Normalmente, puede realizar acciones antes y después del delegado next, tal como se muestra en el ejemplo siguiente:
+
+    var builder = WebApplication.CreateBuilder(args);
+    var app = builder.Build();
+
+    app.Use(async (context, next) =>
+    {
+        // Do work that can write to the Response.
+        await next.Invoke();
+        // Do logging or other work that doesn't write to the Response.
+    });
+
+    app.Run(async context =>
+    {
+        await context.Response.WriteAsync("Hello from 2nd delegate.");
+    });
+
+    app.Run();
+
+### Interrupción del pipeline de solicitudes
+Cuando un delegado no pasa una solicitud al siguiente delegado, se denomina interrupción del pipeline de solicitudes. Este proceso es necesario muchas veces, ya que previene la realización de trabajo innecesario.
+
+Los delegados de Run no reciben un parámetro next. El primer delegado de Run siempre es terminal y finaliza la canalización. Run es una convención. Es posible que algunos componentes de middleware expongan métodos
+
+[Documentación](https://learn.microsoft.com/es-es/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0)
+
+## Filter
+Los filtros en ASP.NET Core permiten que se ejecute el código antes o después de determinadas fases de la canalización del procesamiento de la solicitud.
+
+Se pueden crear filtros personalizados que se encarguen de cuestiones transversales. Entre los ejemplos de cuestiones transversales se incluyen el control de errores, el almacenamiento en caché, la configuración, la autorización y el registro. Los filtros evitan la duplicación de código. Así, por ejemplo, un filtro de excepción de control de errores puede consolidar el control de errores.
+
+Este documento se aplica a Razor Pages, a los controladores de API y a los controladores con vistas. Los filtros no funcionan directamente con componentes de Razor. Un filtro solo puede afectar indirectamente a un componente cuando:
+
+El componente está insertado en una página o vista.
+La página o controlador y la vista usan el filtro.
+
+### Funcionamiento de los filtros
+Los filtros se ejecutan dentro del pipeline de invocación de acciones de ASP.NET Core, a veces denominada pipeline de filtro. Este se ejecuta después de que ASP.NET Core seleccione la acción que se va a ejecutar:
+
+![](/Presentaciones/filter-pipeline-1.png)
+
+[Documentación](https://learn.microsoft.com/es-es/aspnet/core/mvc/controllers/filters?view=aspnetcore-8.0)
+
+### Middleware-Filter
+La ejecución del middleware se produce antes de que el contexto MVC esté disponible en el pipeline. Es decir, el middleware no tiene acceso a ActionExecutingContext o ActionExecutedContext.
+A lo que sí tiene acceso es a HttpContext, que le permitirá realizar acciones tanto en la solicitud como en la respuesta. Dado que aún no se ha producido la vinculación del modelo, el uso de middleware no sería adecuado para ejecutar una función de validación o modificar valores.
+El middleware también se ejecutará en cada solicitud, independientemente de qué controlador o acción se llame.
+
+Por otro lado, los filtros solo se ejecutarán en acciones y controladores específicos a menos que registre el filtro globalmente en el inicio. Como tiene acceso completo al contexto, también puede acceder al controlador y a la acción en sí.

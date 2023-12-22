@@ -20,5 +20,10 @@ namespace Repository
             sr.Close();
             return JsonConvert.DeserializeObject<List<Club>>(json);
         }
+
+        public Task<List<ShortClub>> GetAllShortAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
