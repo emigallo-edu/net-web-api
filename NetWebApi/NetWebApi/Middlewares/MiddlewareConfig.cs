@@ -19,13 +19,12 @@
             });
 
             // Interrumpe el llamado al endpoint
-            app.Run(async context =>
-            {
-                await context.Response.WriteAsync("Hello from 2nd delegate.");
-            });
+            // app.Run(async context =>
+            // {
+            //     await context.Response.WriteAsync("Hello from 2nd delegate.");
+            // });
 
             return app;
         }
-
     }
 }

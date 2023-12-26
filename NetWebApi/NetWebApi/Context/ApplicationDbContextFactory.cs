@@ -36,18 +36,13 @@ namespace NetWebApi.Context
             if (databaseType == DatabaseType.Files)
             {
                 services.AddScoped<IClubRepository, ClubFileRepository>(
-                 (Iservicepri) => new ClubFileRepository(Path.Combine(Environment.CurrentDirectory, "Files")));
+                    x => new ClubFileRepository(Path.Combine(Environment.CurrentDirectory, "Files")));
             }
             else
             {
                 services.AddScoped<IClubRepository, ClubDbRepository>();
             }
             services.AddScoped<ResponseAuditRepository>();
-        }
-
-        public static void SetProvider(this IServiceProvider provider)
-        {
-            _provider = provider;
         }
 
         public static T Get<T>()
@@ -61,6 +56,16 @@ namespace NetWebApi.Context
             contextOptionsBuilder.UseSqlServer(connectionString, x =>
                x.MigrationsHistoryTable("_MigrationsHistory", "dbo")
                .CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
+        }
+
+        public static void SetProvider(IServiceProvider provider)
+        {
+            _provider = provider;
+        }
+
+        public static IServiceProvider GetProvider()
+        {
+            return _provider;
         }
 
         private static string GetConnectionString()

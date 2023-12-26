@@ -9,23 +9,26 @@ namespace NetWebApi.Middlewares
 {
     public class AuditResponseFilter : ActionFilterAttribute
     {
-        private readonly ResponseAuditRepository _responseAuditRepository;
-
         public AuditResponseFilter()
         {
-            this._responseAuditRepository = ApplicationDbContextFactoryConfig.Get<ResponseAuditRepository>();
+
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var action = await next();
-            var result = action.Result as OkObjectResult;
-            var audit = new ResponseAudit()
+            using (var scope = ApplicationDbContextFactoryConfig.GetProvider().CreateScope())
             {
-                Date = DateTime.Now,
-                Item = JsonSerializer.Serialize(result.Value)
-            };
-            //await this._responseAuditRepository.InsertAsync(audit);
+                var responseAuditRepository = scope.ServiceProvider.GetRequiredService<ResponseAuditRepository>();
+
+                var action = await next();
+                var result = action.Result as OkObjectResult;
+                var audit = new ResponseAudit()
+                {
+                    Date = DateTime.Now,
+                    Item = JsonSerializer.Serialize(result.Value)
+                };
+                await responseAuditRepository.InsertAsync(audit);
+            }
         }
     }
 

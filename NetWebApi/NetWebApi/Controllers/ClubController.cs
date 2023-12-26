@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Entities;
+using NetWebApi.Middlewares;
 
 namespace NetWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[AuditResponseFilter]
+    [AuditResponseFilter]
     public class ClubController : ControllerBase
     {
         private readonly IClubRepository _repository;

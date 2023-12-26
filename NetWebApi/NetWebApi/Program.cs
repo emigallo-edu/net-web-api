@@ -20,8 +20,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+ApplicationDbContextFactoryConfig.SetProvider(app.Services);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-app.SetUpUseAndRun();
+// app.SetUpUseAndRun();
 app.Run();

@@ -20,5 +20,13 @@ namespace Repository
                 return await context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<ResponseAudit>> GetAllAsync()
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
+                return context.ResponseAudits.ToList();
+            }
+        }
     }
 }

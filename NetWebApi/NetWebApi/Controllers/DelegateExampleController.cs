@@ -11,9 +11,14 @@ namespace NetWebApi.Controllers
         public IActionResult Index()
         {
             string text = new DelegateExample().Format(
-                "Este es un curso de programación en EscuelaIT",
-                DelegateExample.SecondLetterUpperCase);
+                "Este es un curso de programación en EducacionIT",
+                CustomFormat);
             return Ok(text);
+        }
+
+        private string CustomFormat(string text)
+        {
+            return text.ToUpper();
         }
     }
 }
