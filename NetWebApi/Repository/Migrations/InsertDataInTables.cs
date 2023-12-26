@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Design;
+using Model.Entities;
 
 namespace Repository.Migrations
 {
@@ -12,20 +13,15 @@ namespace Repository.Migrations
             int minClubId = 5;
             int maxClubId = 10;
 
-            InsertTournament(mb, tournamentId);
-            InsertStanding(mb, standingId, tournamentId);
+            //InsertTournament(mb, tournamentId);
+
 
             for (int clubId = minClubId; clubId <= maxClubId; clubId++)
             {
                 InsertClub(mb, clubId);
-                InsertStandingClubs(mb, clubId, standingId);
+                //InsertStanding(mb, standingId, clubId);
                 InsertPlayes(mb, clubId);
                 InsertStadiums(mb, clubId);
-
-                //if (clubId > minClubId)
-                //{
-                //    InsertMatchs(mb, tournamentId, clubId, clubId - 1);
-                //}
             }
         }
 
@@ -35,14 +31,6 @@ namespace Repository.Migrations
             query += $"INSERT INTO Clubs (Id, Name, Birthday, City, Email, NumberOfPartners, Phone, Address)" +
                $"VALUES ({clubId}, '{GetFakedName()}', GETDATE(), '{Faker.Address.City()}', 'club1@mail.com', {new Random().Next(1, 15849)}, '{Faker.Phone.Number()}', '{Faker.Address.StreetAddress()}')";
             query += "SET IDENTITY_INSERT Clubs OFF;";
-
-            mb.Sql(query);
-        }
-
-        private static void InsertStandingClubs(MigrationBuilder mb, int clubId, int standingId)
-        {
-            string query = "INSERT INTO StandingClubs (Id, ClubId, Position, MatchsPlayed, Win, Draw, Loss, Scoring)" +
-                $"VALUES ({standingId}, {clubId}, 1, 0, 0, 0, 0, 0)";
 
             mb.Sql(query);
         }
@@ -74,12 +62,10 @@ namespace Repository.Migrations
             mb.Sql(query);
         }
 
-        private static void InsertStanding(MigrationBuilder mb, int standingId, int tournamentId)
+        private static void InsertStanding(MigrationBuilder mb, int standingId, int clubId)
         {
-            string query = "SET IDENTITY_INSERT Standings ON;";
-            query += "INSERT INTO Standings (Id, TournamentId)" +
-                $"VALUES ({standingId}, {tournamentId})";
-            query += "SET IDENTITY_INSERT Standings OFF;";
+            string query = "INSERT INTO Standings (Id, ClubId,  Win, Draw, Loss, Scoring)" +
+                $"VALUES ({standingId}, {clubId}, 0, 0, 0, 0)";
 
             mb.Sql(query);
         }

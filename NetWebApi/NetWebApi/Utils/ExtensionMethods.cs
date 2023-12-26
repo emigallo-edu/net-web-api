@@ -24,5 +24,20 @@ namespace NetWebApi.Utils
 
             return result;
         }
+
+        public static TSource Second<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Skip(1).First();
+        }
+
+        public static TSource Third<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Skip(2).First();
+        }
+
+        public static TSource Fourth<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Skip(3).First();
+        }
     }
 }

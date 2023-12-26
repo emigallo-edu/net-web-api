@@ -4,19 +4,14 @@
     {
         public Tournament()
         {
-            this.Standing = new Standing();
+            this.Standings = new List<Standing>();
             this.Matches = new List<Match>();
         }
 
         public int Id { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public Standing Standing { get; set; }
+        public ICollection<Standing> Standings { get; set; }
         public ICollection<Match> Matches { get; set; }
-
-        public void Add(Match match)
-        {
-            this.Matches.Add(match);
-        }
     }
 }

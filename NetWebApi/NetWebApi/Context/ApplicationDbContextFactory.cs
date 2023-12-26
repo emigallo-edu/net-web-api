@@ -43,6 +43,9 @@ namespace NetWebApi.Context
                 services.AddScoped<IClubRepository, ClubDbRepository>();
             }
             services.AddScoped<ResponseAuditRepository>();
+            services.AddScoped<MatchRepository>();
+            services.AddScoped<StandingRepository>();
+            services.AddScoped<TournamentRepository>();
         }
 
         public static T Get<T>()

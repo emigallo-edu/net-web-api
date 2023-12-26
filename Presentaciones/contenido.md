@@ -618,3 +618,97 @@ A lo que sí tiene acceso es a HttpContext, que le permitirá realizar acciones 
 El middleware también se ejecutará en cada solicitud, independientemente de qué controlador o acción se llame.
 
 Por otro lado, los filtros solo se ejecutarán en acciones y controladores específicos a menos que registre el filtro globalmente en el inicio. Como tiene acceso completo al contexto, también puede acceder al controlador y a la acción en sí.
+
+
+## Data Transfer Object (DTO)
+Una de las problemáticas más comunes cuando desarrollamos aplicaciones, es diseñar la forma en que la información debe viajar desde una capa de la aplicación a otra capa, ya que muchas veces por desconocimiento o pereza, utilizamos las clases de entidades para retornar los datos, lo que ocasiona que retornemos más datos de los necesarios, o incluso, tengamos que ir en más de una ocasión a la capa de servicios para recuperar los datos requeridos.
+
+El patrón DTO tiene como finalidad la creación de objetos planos (POJO) con una serie de atributos que puedan ser enviados o recuperados del servidor en una sola invocación, de tal forma que un DTO puede contener información de múltiples fuentes o tablas y concentrarlas en una única clase simple.
+
+Utilizar una Entity o cualquier otro objeto que allá sido creado para otro propósito diferente que el de ser usado para transmisión de datos puede tener complicaciones, por lo que el Patrón Data Transfer Object (DTO) propone que en lugar de usar estas clases, creemos clases especiales para transmitir los datos, de esta forma, podemos controlar los datos que enviamos, el nombre, el tipo de datos, etc, además, si estos necesitan cambiar, no tiene impacto sobre la capa de servicios o datos, pues solo se utilizan para transmitir la respuesta. Dicho lo anterior, retornemos al ejemplo anterior, pero utilizando un DTO:
+
+![](/Presentaciones/dto-implementacion.webp)
+
+En este nuevo ejemplo podemos ver que hemos creado un nuevo objeto llamado CustomerDTO, en el cual podemos agregar libremente cuanto atributo requiramos, incluso, podemos asignarle valores de diferentes fuentes de datos.
+
+Debido a que el DTO es una clase creada únicamente para una determinad respuesta, es posible modificarla sin mucho problema, pues no tiene un impacto en la capa de servicios o de datos, ya que en estas capas se trabaja con las Entidades.
+
+[Fuente](https://reactiveprogramming.io/blog/es/patrones-arquitectonicos/dto)
+
+
+En este momento, nuestra API web expone las entidades de base de datos al cliente. El cliente recibe datos que se asignan directamente a las tablas de base de datos. Sin embargo, eso no siempre es una buena idea. A veces quiere cambiar la forma de los datos que envía al cliente. Por ejemplo, puedes:
+
+- Quitar referencias circulares.
+- Ocultar propiedades concretas que los clientes no deben ver.
+- Omitir algunas propiedades para reducir el tamaño de la carga.
+- Aplanar gráficos de objetos que contienen objetos anidados, para que sean más cómodos para los clientes.
+- Evitar las vulnerabilidades de "exceso de publicación". (Consulte Validación de modelos para obtener una explicación sobre el exceso de contabilización).
+- Desacoplar el nivel de servicio de la capa de base de datos.
+
+Para ello, puede definir un objeto de transferencia de datos (DTO). Un DTO es un objeto que define cómo se enviarán los datos a través de la red. Veamos cómo funciona con la entidad Book.
+
+### Creación de clases DTO's
+
+    namespace BookService.Models
+    {
+        public class BookDto
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string AuthorName { get; set; }
+        }
+    }
+
+    namespace BookService.Models
+    {
+        public class BookDetailDto
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public int Year { get; set; }
+            public decimal Price { get; set; }
+            public string AuthorName { get; set; }
+            public string Genre { get; set; }
+        }
+    }
+
+### Mapeo de entidades de dominio a DTO's
+
+    // GET api/Books
+    public IQueryable<BookDto> GetBooks()
+    {
+        var books = from b in db.Books
+                    select new BookDto()
+                    {
+                        Id = b.Id,
+                        Title = b.Title,
+                        AuthorName = b.Author.Name
+                    };
+
+        return books;
+    }
+
+    // GET api/Books/5
+    [ResponseType(typeof(BookDetailDto))]
+    public async Task<IHttpActionResult> GetBook(int id)
+    {
+        var book = await db.Books.Include(b => b.Author).Select(b =>
+            new BookDetailDto()
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Year = b.Year,
+                Price = b.Price,
+                AuthorName = b.Author.Name,
+                Genre = b.Genre
+            }).SingleOrDefaultAsync(b => b.Id == id);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(book);
+    }
+
+
+[Documentación](https://learn.microsoft.com/es-es/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5)

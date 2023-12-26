@@ -15,6 +15,20 @@ namespace Repository.Migrations
                 name: "dbo");
 
             migrationBuilder.CreateTable(
+                name: "ResponseAudits",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Item = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResponseAudits", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stadiums",
                 schema: "dbo",
                 columns: table => new
@@ -44,27 +58,6 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Standings",
-                schema: "dbo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TournamentId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Standings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Standings_Tournaments_TournamentId",
-                        column: x => x.TournamentId,
-                        principalSchema: "dbo",
-                        principalTable: "Tournaments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Clubs",
                 schema: "dbo",
                 columns: table => new
@@ -78,8 +71,7 @@ namespace Repository.Migrations
                     NumberOfPartners = table.Column<int>(type: "int", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StadiumName = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    StandingId = table.Column<int>(type: "int", nullable: true)
+                    StadiumName = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,13 +82,6 @@ namespace Repository.Migrations
                         principalSchema: "dbo",
                         principalTable: "Stadiums",
                         principalColumn: "Name",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Clubs_Standings_StandingId",
-                        column: x => x.StandingId,
-                        principalSchema: "dbo",
-                        principalTable: "Standings",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -161,14 +146,12 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StandingClubs",
+                name: "Standings",
                 schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     ClubId = table.Column<int>(type: "int", nullable: false),
-                    Position = table.Column<int>(type: "int", nullable: false),
-                    MatchsPlayed = table.Column<int>(type: "int", nullable: false),
                     Win = table.Column<int>(type: "int", nullable: false),
                     Draw = table.Column<int>(type: "int", nullable: false),
                     Loss = table.Column<int>(type: "int", nullable: false),
@@ -176,12 +159,40 @@ namespace Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandingClubs", x => new { x.Id, x.ClubId });
+                    table.PrimaryKey("PK_Standings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StandingClubs_Clubs_ClubId",
+                        name: "FK_Standings_Clubs_ClubId",
                         column: x => x.ClubId,
                         principalSchema: "dbo",
                         principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Standings_Tournaments_Id",
+                        column: x => x.Id,
+                        principalSchema: "dbo",
+                        principalTable: "Tournaments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MatchsResults",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Matchid = table.Column<int>(type: "int", nullable: false),
+                    LocalClubGoals = table.Column<int>(type: "int", nullable: false),
+                    VisitingClubGoals = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchsResults", x => x.Matchid);
+                    table.ForeignKey(
+                        name: "FK_MatchsResults_Matchs_Matchid",
+                        column: x => x.Matchid,
+                        principalSchema: "dbo",
+                        principalTable: "Matchs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -193,12 +204,6 @@ namespace Repository.Migrations
                 column: "StadiumName",
                 unique: true,
                 filter: "[StadiumName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clubs_StandingId",
-                schema: "dbo",
-                table: "Clubs",
-                column: "StandingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Matchs_LocalClubId",
@@ -225,25 +230,20 @@ namespace Repository.Migrations
                 column: "ClubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StandingClubs_ClubId",
+                name: "IX_Standings_ClubId",
                 schema: "dbo",
-                table: "StandingClubs",
+                table: "Standings",
                 column: "ClubId",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Standings_TournamentId",
-                schema: "dbo",
-                table: "Standings",
-                column: "TournamentId",
-                unique: true);
+            InsertDataInTables.Insert(migrationBuilder);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Matchs",
+                name: "MatchsResults",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
@@ -251,7 +251,14 @@ namespace Repository.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "StandingClubs",
+                name: "ResponseAudits");
+
+            migrationBuilder.DropTable(
+                name: "Standings",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Matchs",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
@@ -259,15 +266,11 @@ namespace Repository.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Stadiums",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "Standings",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
                 name: "Tournaments",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Stadiums",
                 schema: "dbo");
         }
     }

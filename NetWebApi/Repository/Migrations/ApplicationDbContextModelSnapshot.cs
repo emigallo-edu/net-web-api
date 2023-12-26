@@ -59,16 +59,11 @@ namespace Repository.Migrations
                     b.Property<string>("StadiumName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("StandingId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StadiumName")
                         .IsUnique()
                         .HasFilter("[StadiumName] IS NOT NULL");
-
-                    b.HasIndex("StandingId");
 
                     b.ToTable("Clubs", "dbo");
                 });
@@ -102,6 +97,22 @@ namespace Repository.Migrations
                     b.HasIndex("VisitingClubId");
 
                     b.ToTable("Matchs", "dbo");
+                });
+
+            modelBuilder.Entity("Model.Entities.MatchResult", b =>
+                {
+                    b.Property<int>("Matchid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LocalClubGoals")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitingClubGoals")
+                        .HasColumnType("int");
+
+                    b.HasKey("Matchid");
+
+                    b.ToTable("MatchsResults", "dbo");
                 });
 
             modelBuilder.Entity("Model.Entities.Player", b =>
@@ -146,7 +157,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ResponseAudits");
+                    b.ToTable("ResponseAudits", (string)null);
                 });
 
             modelBuilder.Entity("Model.Entities.Stadium", b =>
@@ -168,25 +179,6 @@ namespace Repository.Migrations
             modelBuilder.Entity("Model.Entities.Standing", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("TournamentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TournamentId")
-                        .IsUnique();
-
-                    b.ToTable("Standings", "dbo");
-                });
-
-            modelBuilder.Entity("Model.Entities.StandingClub", b =>
-                {
-                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("ClubId")
@@ -198,24 +190,18 @@ namespace Repository.Migrations
                     b.Property<int>("Loss")
                         .HasColumnType("int");
 
-                    b.Property<int>("MatchsPlayed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
                     b.Property<int>("Scoring")
                         .HasColumnType("int");
 
                     b.Property<int>("Win")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "ClubId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClubId")
                         .IsUnique();
 
-                    b.ToTable("StandingClubs", "dbo");
+                    b.ToTable("Standings", "dbo");
                 });
 
             modelBuilder.Entity("Model.Entities.Tournament", b =>
@@ -244,11 +230,6 @@ namespace Repository.Migrations
                         .HasForeignKey("Model.Entities.Club", "StadiumName")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Model.Entities.Standing", null)
-                        .WithMany("Clubs")
-                        .HasForeignKey("StandingId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Stadium");
                 });
 
@@ -275,6 +256,17 @@ namespace Repository.Migrations
                     b.Navigation("VisitingClub");
                 });
 
+            modelBuilder.Entity("Model.Entities.MatchResult", b =>
+                {
+                    b.HasOne("Model.Entities.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("Matchid")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+                });
+
             modelBuilder.Entity("Model.Entities.Player", b =>
                 {
                     b.HasOne("Model.Entities.Club", "Club")
@@ -288,20 +280,15 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Model.Entities.Standing", b =>
                 {
-                    b.HasOne("Model.Entities.Tournament", "Tournament")
-                        .WithOne("Standing")
-                        .HasForeignKey("Model.Entities.Standing", "TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tournament");
-                });
-
-            modelBuilder.Entity("Model.Entities.StandingClub", b =>
-                {
                     b.HasOne("Model.Entities.Club", "Club")
                         .WithOne()
-                        .HasForeignKey("Model.Entities.StandingClub", "ClubId")
+                        .HasForeignKey("Model.Entities.Standing", "ClubId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Model.Entities.Tournament", null)
+                        .WithOne("Standing")
+                        .HasForeignKey("Model.Entities.Standing", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -317,11 +304,6 @@ namespace Repository.Migrations
                 {
                     b.Navigation("Club")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Model.Entities.Standing", b =>
-                {
-                    b.Navigation("Clubs");
                 });
 
             modelBuilder.Entity("Model.Entities.Tournament", b =>

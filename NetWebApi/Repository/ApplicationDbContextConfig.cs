@@ -44,6 +44,19 @@ namespace Repository
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
+        internal static void ConfigMatchResult(this ModelBuilder mb)
+        {
+            var entity = mb.Entity<MatchResult>();
+
+            entity.ToTable("MatchsResults", "dbo")
+                .HasKey(x => x.Matchid);
+
+            entity.HasOne(x => x.Match)
+              .WithMany()
+              .HasForeignKey(x => x.Matchid)
+              .OnDelete(DeleteBehavior.Restrict);
+        }
+
         internal static void ConfigStadium(this ModelBuilder mb)
         {
             var entity = mb.Entity<Stadium>();
@@ -63,6 +76,11 @@ namespace Repository
 
             entity.ToTable("Tournaments", "dbo")
                 .HasKey(x => x.Id);
+
+            entity.HasMany(x => x.Standings)
+              .WithOne()
+              .HasForeignKey(x => x.Id)
+              .OnDelete(DeleteBehavior.Restrict);
         }
 
         internal static void ConfigStanding(this ModelBuilder mb)
@@ -72,22 +90,28 @@ namespace Repository
             entity.ToTable("Standings", "dbo")
                 .HasKey(x => x.Id);
 
-            entity.HasMany(x => x.Clubs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Restrict);
-        }
-
-        internal static void ConfigureStandingClub(this ModelBuilder mb)
-        {
-            var entity = mb.Entity<StandingClub>();
-
-            entity.ToTable("StandingClubs", "dbo")
-                .HasKey(x => new { x.Id, x.ClubId });
-
             entity.HasOne(x => x.Club)
                 .WithOne()
-                .HasForeignKey<StandingClub>(x => x.ClubId)
+                .HasForeignKey<Standing>(x => x.ClubId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
+
+        //internal static void ConfigureStandingClub(this ModelBuilder mb)
+        //{
+        //    var entity = mb.Entity<StandingClub>();
+
+        //    entity.ToTable("StandingClubs", "dbo")
+        //        .HasKey(x => new { x.Id, x.ClubId });
+
+        //    entity.HasOne(x => x.Club)
+        //        .WithOne()
+        //        .HasForeignKey<StandingClub>(x => x.ClubId)
+        //        .OnDelete(DeleteBehavior.Restrict);
+
+        //    entity.HasOne(x => x.Standing)
+        //        .WithMany()
+        //        .HasForeignKey(x => x.Id)
+        //        .OnDelete(DeleteBehavior.Restrict);
+        //}
     }
 }

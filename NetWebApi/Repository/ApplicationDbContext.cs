@@ -17,10 +17,10 @@ namespace Repository
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<MatchResult> MatchsResults { get; set; }
         public DbSet<Stadium> Stadiums { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Standing> Standings { get; set; }
-        public DbSet<StandingClub> StandingClubs { get; set; }
         public DbSet<ResponseAudit> ResponseAudits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
@@ -28,10 +28,10 @@ namespace Repository
             mb.ConfigClub();
             mb.ConfigPlayer();
             mb.ConfigMatch();
+            mb.ConfigMatchResult();
             mb.ConfigStadium();
             mb.ConfigTournament();
             mb.ConfigStanding();
-            mb.ConfigureStandingClub();
         }
 
         // Pasos para trabajar con EF + migraciones

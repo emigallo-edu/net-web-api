@@ -18,6 +18,16 @@ namespace Repository
         {
             using (var context = new ApplicationDbContext(this._options))
             {
+                return await context.Clubs
+                    .Include(x => x.Stadium)
+                    .ToListAsync();
+            }
+        }
+
+        public async Task<List<Club>> GetAllSelectingAddressAndCityAsync()
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
                 var result = from club in context.Clubs
                              select new Club
                              {
@@ -26,9 +36,6 @@ namespace Repository
                              };
 
                 return await result.ToListAsync();
-                // return await context.Clubs
-                //     .Include(x => x.Stadium)
-                //     .ToListAsync();
             }
         }
 
