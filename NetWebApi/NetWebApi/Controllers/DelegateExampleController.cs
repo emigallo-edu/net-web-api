@@ -16,6 +16,13 @@ namespace NetWebApi.Controllers
             return Ok(text);
         }
 
+        [HttpGet("makeException")]
+        public IActionResult MakeException()
+        {
+            int.Parse("a");
+            return Ok();
+        }
+
         private string CustomFormat(string text)
         {
             return text.ToUpper();

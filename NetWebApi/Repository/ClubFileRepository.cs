@@ -13,6 +13,11 @@ namespace Repository
             this._path = path;
         }
 
+        public Task ChangeName(int cludId, string newName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Club>> GetAllAsync()
         {
             StreamReader sr = new StreamReader(Path.Combine(this._path, "Clubs.json"));
@@ -22,6 +27,11 @@ namespace Repository
         }
 
         public Task<List<ShortClub>> GetAllShortAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> InsertAsync(Club club)
         {
             throw new NotImplementedException();
         }

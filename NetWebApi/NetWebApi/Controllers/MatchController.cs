@@ -38,8 +38,8 @@ namespace NetWebApi.Controllers
 
             Match match = await this._matchRepository.GetAsync(matchResult.Matchid);
 
-            var localStandingClub = await this._standingRepository.GetAsync(item.Id, match.LocalClubId);
-            var visitingStandingClub = await this._standingRepository.GetAsync(item.Id, match.VisitingClubId);
+            Standing localStandingClub = await this._standingRepository.GetAsync(item.StandingId, match.LocalClubId);
+            Standing visitingStandingClub = await this._standingRepository.GetAsync(item.StandingId, match.VisitingClubId);
 
             switch (item.CalculateMatchResult())
             {
@@ -60,6 +60,7 @@ namespace NetWebApi.Controllers
             }
 
             await this._standingRepository.UpdateAsync(localStandingClub);
+            await this._standingRepository.UpdateAsync(visitingStandingClub);
             return Ok();
         }
     }

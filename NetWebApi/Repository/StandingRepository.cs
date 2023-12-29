@@ -12,6 +12,17 @@ namespace Repository
             this._options = options;
         }
 
+        public async Task<List<Standing>> GetAsync(int id)
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
+                return await context.Standings
+                    .Include(x => x.Club)
+                    .Where(x => x.TournamentId == id)
+                    .ToListAsync();
+            }
+        }
+
         public async Task<Standing> GetAsync(int id, int clubId)
         {
             using (var context = new ApplicationDbContext(this._options))

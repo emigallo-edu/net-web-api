@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Entities;
 using NetWebApi.Middlewares;
+using NetWebApi.Model;
 
 namespace NetWebApi.Controllers
 {
@@ -11,15 +13,18 @@ namespace NetWebApi.Controllers
     public class ClubController : ControllerBase
     {
         private readonly IClubRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ClubController(IClubRepository repository)
+        public ClubController(IClubRepository repository, IMapper mapper)
         {
             this._repository = repository;
+            this._mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult Create(Club club)
+        public async Task<IActionResult> Create(ClubDTO club)
         {
+            await this._repository.InsertAsync(this._mapper.Map<Club>(club));
             return Ok();
         }
 
@@ -41,6 +46,13 @@ namespace NetWebApi.Controllers
         {
             var result = await this._repository.GetAllShortAsync();
             return Ok(result);
+        }
+
+        [HttpPatch("name")]
+        public async Task<IActionResult> ChangeName(ChangeClubNameDTO dto)
+        {
+            await this._repository.ChangeName(dto.Id, dto.Name);
+            return Ok("El registro se modifico correctamente");
         }
     }
 }

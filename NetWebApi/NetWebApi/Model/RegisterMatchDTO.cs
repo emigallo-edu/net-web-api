@@ -1,4 +1,5 @@
 ﻿using Model.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetWebApi.Model
 {
@@ -11,9 +12,16 @@ namespace NetWebApi.Model
 
     public class RegisterMatchDTO
     {
-        public int Id { get; set; }
+        [Required]
+        public int StandingId { get; set; }
+
+        [Required]
         public int Matchid { get; set; }
+
+        [Required]
         public int LocalClubGoals { get; set; }
+
+        [Required]
         public int VisitingClubGoals { get; set; }
 
         public MatchResultEnum CalculateMatchResult()

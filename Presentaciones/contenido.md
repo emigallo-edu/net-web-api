@@ -712,3 +712,10 @@ Para ello, puede definir un objeto de transferencia de datos (DTO). Un DTO es un
 
 
 [Documentación](https://learn.microsoft.com/es-es/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5)
+
+### Auto Mapper
+AutoMapper es un mapeador de objetos. El mapeo objeto-objeto funciona transformando un objeto de entrada de un tipo en un objeto de salida de un tipo diferente.
+
+AutoMapper proporciona una configuración sencilla de tipos, así como pruebas sencillas de asignaciones. La verdadera pregunta puede ser "¿por qué utilizar el mapeo objeto-objeto?" El mapeo puede ocurrir en muchos lugares de una aplicación, pero principalmente en los límites entre capas, como entre las capas UI/Dominio o las capas Servicio/Dominio. Las preocupaciones de una capa a menudo entran en conflicto con las preocupaciones de otra, por lo que el mapeo objeto-objeto conduce a modelos segregados, donde las preocupaciones por cada capa pueden afectar solo a los tipos de esa capa.
+
+[Documentación (https://docs.automapper.org/en/stable/index.html)

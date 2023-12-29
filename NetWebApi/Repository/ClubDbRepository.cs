@@ -1,5 +1,4 @@
-﻿using Faker;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Entities;
 
@@ -36,6 +35,15 @@ namespace Repository
                              };
 
                 return await result.ToListAsync();
+            }
+        }
+
+        public async Task<int> InsertAsync(Club club)
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
+                context.Add(club);
+                return await context.SaveChangesAsync();
             }
         }
 
@@ -81,6 +89,15 @@ namespace Repository
                     });
                 }
                 return result;
+            }
+        }
+
+        public async Task ChangeName(int cludId, string newName)
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
+                context.Clubs.First(x => x.Id == cludId).Name = newName;
+                await context.SaveChangesAsync();
             }
         }
     }
