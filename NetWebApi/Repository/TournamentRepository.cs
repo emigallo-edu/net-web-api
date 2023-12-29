@@ -16,8 +16,7 @@ namespace Repository
         {
             using (var context = new ApplicationDbContext(this._options))
             {
-                context.Tournaments.Add(item);
-                //context.StandingClubs.AddRangeAsync()
+                await context.Tournaments.AddAsync(item);
                 return await context.SaveChangesAsync();
             }
         }

@@ -92,10 +92,10 @@ namespace Repository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TournamentId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LocalClubId = table.Column<int>(type: "int", nullable: false),
-                    VisitingClubId = table.Column<int>(type: "int", nullable: false),
-                    TournamentId = table.Column<int>(type: "int", nullable: true)
+                    VisitingClubId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,7 +119,8 @@ namespace Repository.Migrations
                         column: x => x.TournamentId,
                         principalSchema: "dbo",
                         principalTable: "Tournaments",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +151,7 @@ namespace Repository.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    TournamentId = table.Column<int>(type: "int", nullable: false),
                     ClubId = table.Column<int>(type: "int", nullable: false),
                     Win = table.Column<int>(type: "int", nullable: false),
                     Draw = table.Column<int>(type: "int", nullable: false),
@@ -159,7 +160,7 @@ namespace Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Standings", x => x.Id);
+                    table.PrimaryKey("PK_Standings", x => new { x.TournamentId, x.ClubId });
                     table.ForeignKey(
                         name: "FK_Standings_Clubs_ClubId",
                         column: x => x.ClubId,
@@ -168,8 +169,8 @@ namespace Repository.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Standings_Tournaments_Id",
-                        column: x => x.Id,
+                        name: "FK_Standings_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
                         principalSchema: "dbo",
                         principalTable: "Tournaments",
                         principalColumn: "Id",
@@ -235,7 +236,7 @@ namespace Repository.Migrations
                 table: "Standings",
                 column: "ClubId",
                 unique: true);
-
+        
             InsertDataInTables.Insert(migrationBuilder);
         }
 

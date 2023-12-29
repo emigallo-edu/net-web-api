@@ -6,7 +6,7 @@
         {
         }
 
-        public int Id { get; set; }
+        public int TournamentId { get; set; }
 
         public int ClubId { get; set; }
         //public int Position { get; set; }
@@ -17,5 +17,6 @@
         public int Scoring { get; set; }
 
         public Club Club { get; set; }
+        public Tournament Tournament { get; set; }
     }
 }

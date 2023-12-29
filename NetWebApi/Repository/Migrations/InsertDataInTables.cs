@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Migrations.Design;
-using Model.Entities;
 
 namespace Repository.Migrations
 {
@@ -75,17 +73,6 @@ namespace Repository.Migrations
             string query = $"INSERT INTO Matchs (Date, LocalClubId, VisitingClubId, TournamentId)" +
                    $"VALUES (GETDATE(), 1, 2, {tournamentId})";
             mb.Sql(query);
-        }
-
-        public static void Rollback(MigrationBuilder mb)
-        {
-            mb.Sql(@"DELETE FROM Stadiums
-                    DELETE FROM Standings
-                    DELETE FROM Players
-                    DELETE FROM Matchs
-                    DELETE FROM StandingClubs
-                    DELETE FROM Clubs
-                    DELETE FROM Tournaments");
         }
 
         private static string GetFakedName()

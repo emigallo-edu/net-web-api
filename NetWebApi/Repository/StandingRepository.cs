@@ -17,12 +17,12 @@ namespace Repository
             using (var context = new ApplicationDbContext(this._options))
             {
                 return await context.Standings
-                    .FirstAsync(x => x.Id == id
+                    .FirstAsync(x => x.TournamentId == id
                         && x.ClubId == clubId);
             }
         }
 
-        public async Task<int> InsertStandingClubAsync(Standing item)
+        public async Task<int> InsertAsync(Standing item)
         {
             using (var context = new ApplicationDbContext(this._options))
             {
@@ -31,7 +31,19 @@ namespace Repository
             }
         }
 
-        public async Task<int> UpdateStandingClubAsync(Standing item)
+        public async Task<int> InsertAsync(ICollection<Standing> list)
+        {
+            using (var context = new ApplicationDbContext(this._options))
+            {
+                foreach (var item in list)
+                {
+                    context.Standings.Add(item);
+                }
+                return await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UpdateAsync(Standing item)
         {
             using (var context = new ApplicationDbContext(this._options))
             {

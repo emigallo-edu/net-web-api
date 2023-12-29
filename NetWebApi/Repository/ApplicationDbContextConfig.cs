@@ -79,7 +79,7 @@ namespace Repository
 
             entity.HasMany(x => x.Standings)
               .WithOne()
-              .HasForeignKey(x => x.Id)
+              .HasForeignKey(x => x.TournamentId)
               .OnDelete(DeleteBehavior.Restrict);
         }
 
@@ -88,30 +88,17 @@ namespace Repository
             var entity = mb.Entity<Standing>();
 
             entity.ToTable("Standings", "dbo")
-                .HasKey(x => x.Id);
+                .HasKey(x => new { x.TournamentId, x.ClubId });
+
+            entity.HasOne(x => x.Tournament)
+                .WithMany(x => x.Standings)
+                .HasForeignKey(x => x.TournamentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(x => x.Club)
                 .WithOne()
                 .HasForeignKey<Standing>(x => x.ClubId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-
-        //internal static void ConfigureStandingClub(this ModelBuilder mb)
-        //{
-        //    var entity = mb.Entity<StandingClub>();
-
-        //    entity.ToTable("StandingClubs", "dbo")
-        //        .HasKey(x => new { x.Id, x.ClubId });
-
-        //    entity.HasOne(x => x.Club)
-        //        .WithOne()
-        //        .HasForeignKey<StandingClub>(x => x.ClubId)
-        //        .OnDelete(DeleteBehavior.Restrict);
-
-        //    entity.HasOne(x => x.Standing)
-        //        .WithMany()
-        //        .HasForeignKey(x => x.Id)
-        //        .OnDelete(DeleteBehavior.Restrict);
-        //}
     }
 }

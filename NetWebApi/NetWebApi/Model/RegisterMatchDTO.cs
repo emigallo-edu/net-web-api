@@ -1,4 +1,6 @@
-﻿namespace NetWebApi.Model
+﻿using Model.Entities;
+
+namespace NetWebApi.Model
 {
     public enum MatchResultEnum
     {
@@ -27,6 +29,16 @@
             }
 
             return MatchResultEnum.Draw;
+        }
+
+        public MatchResult GetMatchResult()
+        {
+            return new MatchResult()
+            {
+                Matchid = this.Matchid,
+                LocalClubGoals = this.LocalClubGoals,
+                VisitingClubGoals = this.VisitingClubGoals
+            };
         }
     }
 }

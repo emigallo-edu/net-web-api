@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Model.Entities;
 
 namespace Repository
@@ -22,6 +23,11 @@ namespace Repository
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Standing> Standings { get; set; }
         public DbSet<ResponseAudit> ResponseAudits { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {

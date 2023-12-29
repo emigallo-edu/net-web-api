@@ -12,13 +12,13 @@ namespace NetWebApi.Controllers
     {
         private readonly TournamentRepository _tournamentRepository;
         private readonly IClubRepository _clubRepository;
-        private readonly MatchRepository _matchRepository;
+        private readonly StandingRepository _standingRepository;
 
-        public TournamentController(TournamentRepository repository, IClubRepository clubRepository, MatchRepository matchRepository)
+        public TournamentController(TournamentRepository repository, IClubRepository clubRepository, StandingRepository standingRepository)
         {
             this._tournamentRepository = repository;
             this._clubRepository = clubRepository;
-            this._matchRepository = matchRepository;
+            this._standingRepository = standingRepository;
         }
 
         [HttpPost]
@@ -28,28 +28,24 @@ namespace NetWebApi.Controllers
             clubs = clubs.Take(4).ToList();
             List<Match> matches = this.GetDayMatchs(clubs);
 
-            List<Standing> standings = new List<Standing>();
-            int standingId = 1;
-            foreach (Club club in clubs)
-            {
-                standings.Add(new Standing()
-                {
-                    Id = standingId,
-                    ClubId = club.Id
-                });
-                standingId++;
-            }
-
             var tournament = new Tournament()
             {
                 Start = matches.Min(x => x.Date),
-                End = matches.Max(x => x.Date),
-                Standings = standings,
-                Matches = matches
+                Standings = new List<Standing>(),
+                Matches = matches,
+                End = matches.Max(x => x.Date)
             };
 
+            foreach (Club club in clubs)
+            {
+                tournament.Standings.Add(new Standing()
+                {
+                    Tournament = tournament,
+                    ClubId = club.Id
+                });
+            }
+
             await this._tournamentRepository.InsertAsync(tournament);
-          
             return Ok();
         }
 

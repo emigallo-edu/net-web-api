@@ -59,7 +59,7 @@ namespace NetWebApi.Controllers
                     break;
             }
 
-            await this._standingRepository.UpdateStandingClubAsync(localStandingClub);
+            await this._standingRepository.UpdateAsync(localStandingClub);
             return Ok();
         }
     }

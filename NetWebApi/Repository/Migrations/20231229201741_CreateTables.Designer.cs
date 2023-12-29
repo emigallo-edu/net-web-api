@@ -12,7 +12,7 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231226220104_CreateTables")]
+    [Migration("20231229201741_CreateTables")]
     partial class CreateTables
     {
         /// <inheritdoc />
@@ -85,7 +85,7 @@ namespace Repository.Migrations
                     b.Property<int>("LocalClubId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TournamentId")
+                    b.Property<int>("TournamentId")
                         .HasColumnType("int");
 
                     b.Property<int>("VisitingClubId")
@@ -181,7 +181,7 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Model.Entities.Standing", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TournamentId")
                         .HasColumnType("int");
 
                     b.Property<int>("ClubId")
@@ -199,7 +199,7 @@ namespace Repository.Migrations
                     b.Property<int>("Win")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("TournamentId", "ClubId");
 
                     b.HasIndex("ClubId")
                         .IsUnique();
@@ -246,7 +246,9 @@ namespace Repository.Migrations
 
                     b.HasOne("Model.Entities.Tournament", null)
                         .WithMany("Matches")
-                        .HasForeignKey("TournamentId");
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Entities.Club", "VisitingClub")
                         .WithMany()
@@ -289,13 +291,15 @@ namespace Repository.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Model.Entities.Tournament", null)
-                        .WithOne("Standing")
-                        .HasForeignKey("Model.Entities.Standing", "Id")
+                    b.HasOne("Model.Entities.Tournament", "Tournament")
+                        .WithMany("Standings")
+                        .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Club");
+
+                    b.Navigation("Tournament");
                 });
 
             modelBuilder.Entity("Model.Entities.Club", b =>
@@ -313,8 +317,7 @@ namespace Repository.Migrations
                 {
                     b.Navigation("Matches");
 
-                    b.Navigation("Standing")
-                        .IsRequired();
+                    b.Navigation("Standings");
                 });
 #pragma warning restore 612, 618
         }
