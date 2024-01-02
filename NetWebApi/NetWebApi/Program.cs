@@ -6,12 +6,12 @@ using NetWebApi.Model;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(
-    
-    // Manejo de Exception por Filter
-//    options =>
-//{
-//    options.Filters.Add<CustomExceptionFilter>();
-//}
+
+// Manejo de Exception por Filter
+    options =>
+{
+    options.Filters.Add<CustomExceptionFilter>();
+}
 
 );
 builder.Services.AddEndpointsApiExplorer();
@@ -22,8 +22,9 @@ builder.Services.AddRepositories(DatabaseType.SqlServer);
 
 builder.Services.AddAutoMapper(configuration =>
 {
-    configuration.CreateMap<ClubDTO, Club>();
-    //configuration.CreateMap<AutorCreacionDTO, Autor>();
+    configuration.CreateMap<ClubDTO, Club>()
+        .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.NombreClub))
+        .ReverseMap();
 });
 
 var app = builder.Build();
@@ -41,6 +42,7 @@ app.UseAuthorization();
 app.MapControllers();
 // app.SetUpUseAndRun();
 
-// Maneja de Exception por Middleware app.UseMiddleware<ExceptionMiddleware>();
+// Maneja de Exception por Middleware
+//app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

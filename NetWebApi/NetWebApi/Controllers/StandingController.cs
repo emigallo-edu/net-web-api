@@ -58,7 +58,7 @@ namespace NetWebApi.Controllers
                 builder.AppendLine($"<td>{standing.Scoring}</td>");
                 builder.AppendLine($"</tr>");
             }
-
+            builder.AppendLine("$</table>");
             return builder.ToString();
         }
     }

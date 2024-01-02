@@ -7,7 +7,7 @@ namespace NetWebApi.Model
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string NombreClub { get; set; }
 
         [Required]
         public DateTime Birthday { get; set; }
