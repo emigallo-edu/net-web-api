@@ -719,3 +719,31 @@ AutoMapper es un mapeador de objetos. El mapeo objeto-objeto funciona transforma
 AutoMapper proporciona una configuración sencilla de tipos, así como pruebas sencillas de asignaciones. La verdadera pregunta puede ser "¿por qué utilizar el mapeo objeto-objeto?" El mapeo puede ocurrir en muchos lugares de una aplicación, pero principalmente en los límites entre capas, como entre las capas UI/Dominio o las capas Servicio/Dominio. Las preocupaciones de una capa a menudo entran en conflicto con las preocupaciones de otra, por lo que el mapeo objeto-objeto conduce a modelos segregados, donde las preocupaciones por cada capa pueden afectar solo a los tipos de esa capa.
 
 [Documentación (https://docs.automapper.org/en/stable/index.html)
+
+### Seguridad
+
+## Autenticación
+Es el proceso de verificar las credenciales que proporciona un usuario con las almacenadas en un sistema para demostrar que el usuario es quien dice ser. Si las credenciales coinciden, entonces otorgas acceso. Si no, lo niegas.
+
+# Métodos de autenticación
+- Autenticación de factor único: se utiliza a menudo como proceso de autenticación para sistemas de menor riesgo. Por ej: nombre de usuario y contraseña.
+  
+- Autenticación de 2 factores: este método es más seguro, ya que comprende dos factores de autenticación: normalmente algo que sabes, por ejemplo, nombre de usuario y contraseña, más algo que se tienes, por ejemplo, un SMS de teléfono o un token de seguridad.
+  
+- Autenticación de múltiple factores: este método es más seguro aún y suele funcionar bajo la premisa de algo que sabes, algo que tengas y  algo que eres (datos biométricos).
+
+## Autorización
+Es el proceso de verificar que se le permite acceder a un área de una aplicación o realizar acciones específicas, según ciertos criterios y condiciones establecidos por la aplicación.
+La autorización puede otorgar o denegar permiso para realizar tareas o acceder a áreas de una aplicación.
+
+# Esquemas de autenticación HTTP
+- Anónimo: cualquiera pueda acceder a un endpoint.
+  
+- Básico: a la hora de enviar un nombre de usuario y la contraseña al Web API, la
+contraseña se va a transformar en Base64. Esto implica que cualquiera con acceso a estos datos puede obtener el nombre del usuario y la contraseña.
+
+- Bearer: este esquema está basado en tokens. Cuando el usuario se auténtica, el servidor le retorna un token como string el cual el usuario puede utilizar en subsiguientes peticiones HTTP al servidor.
+
+# Diferentes formas de implementar autorización (específico .NET, puede variar en otras tecnologías)
+- Basado en roles
+- Basado en 'claims'

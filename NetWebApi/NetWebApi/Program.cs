@@ -2,6 +2,7 @@ using Model.Entities;
 using NetWebApi.Context;
 using NetWebApi.Middlewares;
 using NetWebApi.Model;
+using Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationDbContext();
 builder.Services.AddRepositories(DatabaseType.SqlServer);
+builder.Services.AddSecurity();
 
 builder.Services.AddAutoMapper(configuration =>
 {
@@ -40,6 +42,7 @@ ApplicationDbContextFactoryConfig.SetProvider(app.Services);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseAuthentication();
 // app.SetUpUseAndRun();
 
 // Maneja de Exception por Middleware
