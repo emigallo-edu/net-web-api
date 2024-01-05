@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Model;
 using Repository;
+using Security;
 
 namespace NetWebApi.Context
 {
@@ -21,6 +22,16 @@ namespace NetWebApi.Context
         }
     }
 
+    public class SecurityDbContextFactory : IDesignTimeDbContextFactory<SecurityDbContext>
+    {
+        public SecurityDbContext CreateDbContext(string[] args)
+        {
+            var contextOptionsBuilder = new DbContextOptionsBuilder<SecurityDbContext>();
+            contextOptionsBuilder.Config();
+            return new SecurityDbContext(contextOptionsBuilder.Options);
+        }
+    }
+
     public static class ApplicationDbContextFactoryConfig
     {
         private static IServiceProvider _provider;
@@ -28,6 +39,12 @@ namespace NetWebApi.Context
         public static void AddApplicationDbContext(this IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(
+                options => options.Config());
+        }
+
+        public static void AddSecurityDbContext(this IServiceCollection services)
+        {
+            services.AddDbContext<SecurityDbContext>(
                 options => options.Config());
         }
 

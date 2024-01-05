@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Model.Entities;
 using NetWebApi.Model;
 using Repository;
@@ -58,7 +57,7 @@ namespace NetWebApi.Controllers
                 builder.AppendLine($"<td>{standing.Scoring}</td>");
                 builder.AppendLine($"</tr>");
             }
-            builder.AppendLine("$</table>");
+            builder.AppendLine("</table>");
             return builder.ToString();
         }
     }

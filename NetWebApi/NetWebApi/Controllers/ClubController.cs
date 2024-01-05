@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Entities;
-using NetWebApi.Middlewares;
 using NetWebApi.Model;
+using Security;
 
 namespace NetWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [AuditResponseFilter]
+
     public class ClubController : ControllerBase
     {
         private readonly IClubRepository _repository;
@@ -28,7 +29,8 @@ namespace NetWebApi.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("all")]
+        [Authorize(Roles = Roles.USER)]
         public async Task<IActionResult> GetAll()
         {
             var result = await this._repository.GetAllAsync();
@@ -54,5 +56,13 @@ namespace NetWebApi.Controllers
             await this._repository.ChangeName(dto.Id, dto.Name);
             return Ok("El registro se modifico correctamente");
         }
+    }
+
+
+
+    public static class Claims
+    {
+        public const string CREATE_INVOICE = "CrearFactura";
+        public const string GET_INVOICES = "ObtenerFacturas";
     }
 }

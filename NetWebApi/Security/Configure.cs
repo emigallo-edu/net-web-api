@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Net;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Security
 {
@@ -7,16 +7,12 @@ namespace Security
     {
         public static IServiceCollection AddSecurity(this IServiceCollection services)
         {
-            //services.AddDbContext<SecurityDbContext>(options => options.UseSqlServer(""));
-            //services.AddIdentity<User, IdentityRole>()
-            //                   .AddEntityFrameworkStores<SecurityDbContext>()
-            //                   .AddDefaultTokenProviders();
-            return services;
-        }
+            services.AddIdentity<User, IdentityRole>()
+                               .AddEntityFrameworkStores<SecurityDbContext>()
+                               .AddDefaultTokenProviders()
+                               .AddRoles<IdentityRole>();
 
-        public static void UseAuthentication(this WebClient app)
-        {
-            app.UseAuthentication();
+            return services;
         }
     }
 }

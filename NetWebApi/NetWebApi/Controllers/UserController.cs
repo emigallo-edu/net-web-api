@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Model.Entities;
+using NetWebApi.Model;
+using NetWebApi.Utils;
 using Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,40 +16,63 @@ namespace NetWebApi.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
 
-        public UserController(UserManager<User> userRepository, SignInManager<User> signInManager, IConfiguration configuration)
+        public UserController(UserManager<User> userRepository, SignInManager<User> signInManager)
         {
             this._userManager = userRepository;
             this._signInManager = signInManager;
-            this._configuration = configuration;
         }
 
-        [HttpGet("login")]
-        public async Task<IActionResult> Login(string name, string password)
+        [HttpGet("Login")]
+        public async Task<IActionResult> Login(LoginRequestDTO dto)
         {
-            var result = await this._signInManager.PasswordSignInAsync(name, password, false, false);
+            var result = await this._signInManager.PasswordSignInAsync(dto.UserName, dto.Password, false, false);
 
+            if (result.Succeeded)
+            {
+                User user = await this._userManager.FindByNameAsync(dto.UserName);
+                var roles = await this._userManager.GetRolesAsync(user);
+                UserTokenResponse userTokenResponse = this.CreateToken(roles);
 
-            return Ok();
+                LoginResponseDTO responseDTO = new LoginResponseDTO()
+                {
+                    Token = userTokenResponse.Token,
+                    Expiration = userTokenResponse.Expiration
+                };
+                return Ok(responseDTO);
+            }
+            return BadRequest();
         }
 
-        private UserTokenResponse CrearToken(UserTokenRequest userInfo, IList<string> roles)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(CreateUserDTO dto)
+        {
+            User user = dto.GetUser();
+            user.PasswordHash = this._userManager.PasswordHasher.HashPassword(user, dto.PasswordHash);
+
+            var result = await this._userManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                await this._userManager.AddToRolesAsync(user, dto.Roles);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+
+        private UserTokenResponse CreateToken(IList<string> roles)
         {
             var claims = new List<Claim>
                 {
-                //new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
-                new Claim("miValor", "Lo que yo quiera"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim("miValor", "Lo que yo quiera"),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
             foreach (var rol in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, rol));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-            var creds = new SigningCredentials(key,
-            SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigureToken1.Secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiration = DateTime.UtcNow.AddYears(1);
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: null,
@@ -59,7 +83,7 @@ namespace NetWebApi.Controllers
             return new UserTokenResponse()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiracion = expiration
+                Expiration = expiration
             };
         }
     }

@@ -10,6 +10,6 @@ namespace Security
     public class UserTokenResponse
     {
         public string Token { get; set; }
-        public DateTime Expiracion { get; set; }
+        public DateTime Expiration { get; set; }
     }
 }
