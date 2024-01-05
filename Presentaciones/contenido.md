@@ -718,14 +718,14 @@ AutoMapper es un mapeador de objetos. El mapeo objeto-objeto funciona transforma
 
 AutoMapper proporciona una configuración sencilla de tipos, así como pruebas sencillas de asignaciones. La verdadera pregunta puede ser "¿por qué utilizar el mapeo objeto-objeto?" El mapeo puede ocurrir en muchos lugares de una aplicación, pero principalmente en los límites entre capas, como entre las capas UI/Dominio o las capas Servicio/Dominio. Las preocupaciones de una capa a menudo entran en conflicto con las preocupaciones de otra, por lo que el mapeo objeto-objeto conduce a modelos segregados, donde las preocupaciones por cada capa pueden afectar solo a los tipos de esa capa.
 
-[Documentación (https://docs.automapper.org/en/stable/index.html)
+[Documentación](https://docs.automapper.org/en/stable/index.html)
 
-### Seguridad
+## Seguridad
 
 ## Autenticación
 Es el proceso de verificar las credenciales que proporciona un usuario con las almacenadas en un sistema para demostrar que el usuario es quien dice ser. Si las credenciales coinciden, entonces otorgas acceso. Si no, lo niegas.
 
-# Métodos de autenticación
+### Métodos de autenticación
 - Autenticación de factor único: se utiliza a menudo como proceso de autenticación para sistemas de menor riesgo. Por ej: nombre de usuario y contraseña.
   
 - Autenticación de 2 factores: este método es más seguro, ya que comprende dos factores de autenticación: normalmente algo que sabes, por ejemplo, nombre de usuario y contraseña, más algo que se tienes, por ejemplo, un SMS de teléfono o un token de seguridad.
@@ -736,7 +736,7 @@ Es el proceso de verificar las credenciales que proporciona un usuario con las a
 Es el proceso de verificar que se le permite acceder a un área de una aplicación o realizar acciones específicas, según ciertos criterios y condiciones establecidos por la aplicación.
 La autorización puede otorgar o denegar permiso para realizar tareas o acceder a áreas de una aplicación.
 
-# Esquemas de autenticación HTTP
+### Esquemas de autenticación HTTP
 - Anónimo: cualquiera pueda acceder a un endpoint.
   
 - Básico: a la hora de enviar un nombre de usuario y la contraseña al Web API, la
@@ -744,6 +744,61 @@ contraseña se va a transformar en Base64. Esto implica que cualquiera con acces
 
 - Bearer: este esquema está basado en tokens. Cuando el usuario se auténtica, el servidor le retorna un token como string el cual el usuario puede utilizar en subsiguientes peticiones HTTP al servidor.
 
-# Diferentes formas de implementar autorización (específico .NET, puede variar en otras tecnologías)
+### Diferentes formas de implementar autorización (específico .NET, puede variar en otras tecnologías)
 - Basado en roles
 - Basado en 'claims'
+
+## Identity en ASP.NET Core
+Es una API que admite la funcionalidad de inicio de sesión de la interfaz de usuario (UI).
+Administra usuarios, contraseñas, datos de perfil, roles, notificaciones, tokens, confirmación por correo electrónico, etc.
+
+Los usuarios pueden crear una cuenta con la información de inicio de sesión almacenada en Identity o pueden usar un proveedor de inicio de sesión externo. Entre los proveedores de inicio de sesión externos admitidos se incluyen Facebook, Google, Cuenta Microsoft y Twitter.
+
+[Documentación](https://learn.microsoft.com/es-es/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio)
+
+## ¿Qué es un Token?
+Es un objeto físico o digital que tiene valor en cierto contexto o para determinada comunidad, aunque su propia materialidad no contenga ese valor en sí.
+
+Las fichas de casino, por ejemplo, son solo pedazos de plástico de distintos colores, pero representan cantidades de dinero.
+
+Motivos de su uso:
+- Comodidad
+- Seguridad
+- Facilidad de transportarlos o transferirlos
+
+### Json Web Token (JWT)
+Es un estándar abierto basado en JSON para la creación de tokens de acceso que permiten la propagación de identidad y privilegios o claims en inglés.
+
+Por ejemplo, un servidor podría generar un token indicando que el usuario tiene privilegios de administrador y proporcionarlo a un cliente. El cliente entonces podría utilizar el token para probar que está actuando como un administrador en el cliente o en otro sistema.
+
+El token está firmado por la clave del servidor, así que el cliente y el servidor son ambos capaces de verificar que el token es legítimo. Los JSON Web Tokens están diseñados para ser compactos y poder ser enviados en las URL's. 
+
+Los privilegios de los JSON Web Tokens puedes ser utilizados para propagar la identidad de usuarios como parte del proceso de autenticación entre un proveedor de identidad y un proveedor de servicio, o cualquiera otro tipo de privilegios requeridos por procesos empresariales.
+
+#### Uso
+La autorización se logra cuando el usuario ingresa sus credenciales con éxito, entonces se genera un JSON Web Token que es retornado al cliente, quien tiene que guardarlo localmente, en vez del modelo tradicional de crear una sesión en el servidor y retornar una cookie.
+
+Siempre que el usuario quiere acceder a una ruta protegida o recurso, el cliente tiene que enviar el JWT, generalmente en el encabezado de Authorization utilizando el esquema Bearer. El contenido del encabezado HTTP se ve de la siguiente forma:
+
+    Authorization: Bearer eyJhbGci...<snip>...yu5CSpyHI
+
+Este es un mecanismo de autenticación sin estado - stateless- ya que la sesión del usuario nunca se guarda en el proveedor de identidad o en el proveedor del servicio. Los recursos protegidos siempre comprobaran si existe un JWT válido en cada pedido de acceso. Si el token está presente y es válido, el proveedor del servicio otorga accesos a los recursos protegidos. Como los JWTs contienen toda la información necesaria en sí mismos, se reduce la necesidad de consultar la base de datos u otras fuentes de información múltiples veces.
+
+[Documentación](https://es.wikipedia.org/wiki/JSON_Web_Token)
+
+## Intercambio de recursos de origen cruzado (CORS)
+Es un mecanismo basado en cabeceras HTTP que permite a un servidor indicar cualquier dominio, esquema o puerto con un origen distinto del suyo desde el que un navegador debería permitir la carga de recursos. CORS también se basa en un mecanismo por el cual los navegadores realizan una solicitud de "verificación previa" al servidor que aloja el recurso de origen cruzado, con el fin de comprobar que el servidor permitirá la solicitud real. En esa comprobación previa, el navegador envía cabeceras que indican el método HTTP y las cabeceras que se utilizarán en la solicitud real.
+
+Por razones de seguridad, los navegadores restringen las peticiones HTTP de origen cruzado iniciadas desde scripts. Por ejemplo, XMLHttpRequest y la API Fetch siguen la Política Same-origin. Esto significa que una aplicación web que utilice esas API solo puede solicitar recursos del mismo origen desde el que se cargó la aplicación, a menos que la respuesta de otros orígenes incluya las cabeceras CORS adecuadas.
+
+![](/Presentaciones/cors_principle.png)
+
+[Documentación](https://developer.mozilla.org/es/docs/Web/HTTP/CORS)
+[Implementación en .NET](https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0)
+
+## Protocolo seguro de transferencia de hipertexto (HTTPS)
+Es un protocolo de aplicación basado en el protocolo HTTP, destinado a la transferencia segura de datos de hipertexto, es decir, es la versión segura de HTTP. 
+
+El sistema HTTPS utiliza un cifrado basado en la seguridad de textos SSL/TLS para crear un canal cifrado (cuyo nivel de cifrado depende del servidor remoto y del navegador utilizado por el cliente) más apropiado para el tráfico de información sensible que el protocolo HTTP. De este modo se consigue que la información sensible (usuario y claves de paso normalmente) no pueda ser usada por un atacante que haya conseguido interceptar la transferencia de datos de la conexión, ya que lo único que obtendrá será un flujo de datos cifrados que le resultará imposible de descifrar.
+
+El puerto estándar para este protocolo es el 443.

@@ -22,16 +22,15 @@ builder.Services.AddApplicationDbContext();
 builder.Services.AddRepositories(DatabaseType.SqlServer);
 builder.Services.AddSecurityDbContext();
 builder.Services.AddSecurity();
-builder.Services.ConfigureToken();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "AcceptLocalHost",
-                      policy =>
-                      {
-                          policy.WithOrigins("http://127.0.0.1:5500");
-                      });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: "AcceptLocalHost",
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("http://127.0.0.1:5500");
+//                      });
+//});
 
 builder.Services.AddAutoMapper(configuration =>
 {
@@ -54,7 +53,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AcceptLocalHost");
+//app.UseCors("AcceptLocalHost");
 
 // Maneja de Exception por Middleware
 //app.UseMiddleware<ExceptionMiddleware>();

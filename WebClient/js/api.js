@@ -1,7 +1,7 @@
 const api = "https://localhost:7054/";
 
 function getClubs() {
-    fetch(api + "club/all")
+    fetch(api + "club/short")
         .then(function (response) {
             return response.json();
         })
@@ -20,5 +20,4 @@ function getStanding(id) {
         });
 }
 
-
-getStanding(1);
+getClubs();
