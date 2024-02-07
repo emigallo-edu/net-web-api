@@ -163,8 +163,8 @@ englobar las distintas funcionalidades entre sí.
 
 Un endpoint es un puerto de comunicaciones empleado para realizar llamadas a procedimientos remotos. Podemos decir que los endpoints son las URL's que reciben o retornan información de un Web API.
 
-QueryString: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas <br>
-QueryPath: https://localhost:7054/WeatherForecast/Freezing/bsas
+QueryParams: https://localhost:7054/WeatherForecast/Name?name=Freezing&city=bsas <br>
+PathParams https://localhost:7054/WeatherForecast/Freezing/bsas
 
 ### RESTFul
 
