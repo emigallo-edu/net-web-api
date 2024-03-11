@@ -1,4 +1,5 @@
 # WebAPI
+1. [Filter](#filter)
 
 ## Introducción <name>
 
@@ -595,7 +596,7 @@ Los delegados de Run no reciben un parámetro next. El primer delegado de Run si
 
 [Documentación](https://learn.microsoft.com/es-es/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0)
 
-## Filter
+## Filter {#filter}
 Los filtros en ASP.NET Core permiten que se ejecute el código antes o después de determinadas fases de la canalización del procesamiento de la solicitud.
 
 Se pueden crear filtros personalizados que se encarguen de cuestiones transversales. Entre los ejemplos de cuestiones transversales se incluyen el control de errores, el almacenamiento en caché, la configuración, la autorización y el registro. Los filtros evitan la duplicación de código. Así, por ejemplo, un filtro de excepción de control de errores puede consolidar el control de errores.
