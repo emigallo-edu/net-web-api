@@ -204,7 +204,7 @@ Es un marco web de código abierto, creado por Microsoft, para crear servicios y
 <br>
 <br>
 
-## Relación por colaboración entre clases
+## Relación entre clases
 Si dos objetos colaboran, a través del paso de mensajes, sus respectivas clases están relacionadas.
 
 ### Relación de Composición/Agregación
@@ -311,16 +311,16 @@ Existe una relación de uso entre la clase A, el cliente, y la clase B, el servi
 ### Comparativa de Relaciones entre Clases por Colaboración
 ![](/Presentaciones/comparativaRelaciones.jpg)
 
-## Relaciones por transmisión entre clases
+### Relaciones por transmisión entre clases
 Si una clase transmite a otra todos sus miembros, atributos y métodos, para organizar una jerarquía de clasificación.
 
-### Relación de Herencia por Extensión
+#### Relación de Herencia por Extensión
 La clase descendiente implementa todas las operaciones de la clase base, añadiendo o redefiniendo partes especializadas
 
 ![](/Presentaciones/herenciaEspecializacion.svg)
 
 
-### Relación de Herencia por Implementación
+#### Relación de Herencia por Implementación
 La especialización transforma el concepto de la clase base a la clase derivada
 
 ![](/Presentaciones/herenciaExtensión.svg)
@@ -722,21 +722,21 @@ AutoMapper proporciona una configuración sencilla de tipos, así como pruebas s
 
 ## Seguridad
 
-## Autenticación
+### Autenticación
 Es el proceso de verificar las credenciales que proporciona un usuario con las almacenadas en un sistema para demostrar que el usuario es quien dice ser. Si las credenciales coinciden, entonces otorgas acceso. Si no, lo niegas.
 
-### Métodos de autenticación
+#### Métodos de autenticación
 - Autenticación de factor único: se utiliza a menudo como proceso de autenticación para sistemas de menor riesgo. Por ej: nombre de usuario y contraseña.
   
 - Autenticación de 2 factores: este método es más seguro, ya que comprende dos factores de autenticación: normalmente algo que sabes, por ejemplo, nombre de usuario y contraseña, más algo que se tienes, por ejemplo, un SMS de teléfono o un token de seguridad.
   
 - Autenticación de múltiple factores: este método es más seguro aún y suele funcionar bajo la premisa de algo que sabes, algo que tengas y  algo que eres (datos biométricos).
 
-## Autorización
+### Autorización
 Es el proceso de verificar que se le permite acceder a un área de una aplicación o realizar acciones específicas, según ciertos criterios y condiciones establecidos por la aplicación.
 La autorización puede otorgar o denegar permiso para realizar tareas o acceder a áreas de una aplicación.
 
-### Esquemas de autenticación HTTP
+#### Esquemas de autenticación HTTP
 - Anónimo: cualquiera pueda acceder a un endpoint.
   
 - Básico: a la hora de enviar un nombre de usuario y la contraseña al Web API, la
@@ -744,11 +744,11 @@ contraseña se va a transformar en Base64. Esto implica que cualquiera con acces
 
 - Bearer: este esquema está basado en tokens. Cuando el usuario se auténtica, el servidor le retorna un token como string el cual el usuario puede utilizar en subsiguientes peticiones HTTP al servidor.
 
-### Diferentes formas de implementar autorización (específico .NET, puede variar en otras tecnologías)
+#### Diferentes formas de implementar autorización (específico .NET, puede variar en otras tecnologías)
 - Basado en roles
 - Basado en 'claims'
 
-## Identity en ASP.NET Core
+### Identity en ASP.NET Core
 Es una API que admite la funcionalidad de inicio de sesión de la interfaz de usuario (UI).
 Administra usuarios, contraseñas, datos de perfil, roles, notificaciones, tokens, confirmación por correo electrónico, etc.
 
@@ -756,7 +756,7 @@ Los usuarios pueden crear una cuenta con la información de inicio de sesión al
 
 [Documentación](https://learn.microsoft.com/es-es/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio)
 
-## ¿Qué es un Token?
+### ¿Qué es un Token?
 Es un objeto físico o digital que tiene valor en cierto contexto o para determinada comunidad, aunque su propia materialidad no contenga ese valor en sí.
 
 Las fichas de casino, por ejemplo, son solo pedazos de plástico de distintos colores, pero representan cantidades de dinero.
@@ -766,7 +766,7 @@ Motivos de su uso:
 - Seguridad
 - Facilidad de transportarlos o transferirlos
 
-### Json Web Token (JWT)
+#### Json Web Token (JWT)
 Es un estándar abierto basado en JSON para la creación de tokens de acceso que permiten la propagación de identidad y privilegios o claims en inglés.
 
 Por ejemplo, un servidor podría generar un token indicando que el usuario tiene privilegios de administrador y proporcionarlo a un cliente. El cliente entonces podría utilizar el token para probar que está actuando como un administrador en el cliente o en otro sistema.
@@ -775,7 +775,7 @@ El token está firmado por la clave del servidor, así que el cliente y el servi
 
 Los privilegios de los JSON Web Tokens puedes ser utilizados para propagar la identidad de usuarios como parte del proceso de autenticación entre un proveedor de identidad y un proveedor de servicio, o cualquiera otro tipo de privilegios requeridos por procesos empresariales.
 
-#### Uso
+##### Uso
 La autorización se logra cuando el usuario ingresa sus credenciales con éxito, entonces se genera un JSON Web Token que es retornado al cliente, quien tiene que guardarlo localmente, en vez del modelo tradicional de crear una sesión en el servidor y retornar una cookie.
 
 Siempre que el usuario quiere acceder a una ruta protegida o recurso, el cliente tiene que enviar el JWT, generalmente en el encabezado de Authorization utilizando el esquema Bearer. El contenido del encabezado HTTP se ve de la siguiente forma:
@@ -786,7 +786,7 @@ Este es un mecanismo de autenticación sin estado - stateless- ya que la sesión
 
 [Documentación](https://es.wikipedia.org/wiki/JSON_Web_Token)
 
-## Intercambio de recursos de origen cruzado (CORS)
+### Intercambio de recursos de origen cruzado (CORS)
 Es un mecanismo basado en cabeceras HTTP que permite a un servidor indicar cualquier dominio, esquema o puerto con un origen distinto del suyo desde el que un navegador debería permitir la carga de recursos. CORS también se basa en un mecanismo por el cual los navegadores realizan una solicitud de "verificación previa" al servidor que aloja el recurso de origen cruzado, con el fin de comprobar que el servidor permitirá la solicitud real. En esa comprobación previa, el navegador envía cabeceras que indican el método HTTP y las cabeceras que se utilizarán en la solicitud real.
 
 Por razones de seguridad, los navegadores restringen las peticiones HTTP de origen cruzado iniciadas desde scripts. Por ejemplo, XMLHttpRequest y la API Fetch siguen la Política Same-origin. Esto significa que una aplicación web que utilice esas API solo puede solicitar recursos del mismo origen desde el que se cargó la aplicación, a menos que la respuesta de otros orígenes incluya las cabeceras CORS adecuadas.
@@ -796,7 +796,7 @@ Por razones de seguridad, los navegadores restringen las peticiones HTTP de orig
 [Documentación](https://developer.mozilla.org/es/docs/Web/HTTP/CORS)
 [Implementación en .NET](https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0)
 
-## Protocolo seguro de transferencia de hipertexto (HTTPS)
+### Protocolo seguro de transferencia de hipertexto (HTTPS)
 Es un protocolo de aplicación basado en el protocolo HTTP, destinado a la transferencia segura de datos de hipertexto, es decir, es la versión segura de HTTP. 
 
 El sistema HTTPS utiliza un cifrado basado en la seguridad de textos SSL/TLS para crear un canal cifrado (cuyo nivel de cifrado depende del servidor remoto y del navegador utilizado por el cliente) más apropiado para el tráfico de información sensible que el protocolo HTTP. De este modo se consigue que la información sensible (usuario y claves de paso normalmente) no pueda ser usada por un atacante que haya conseguido interceptar la transferencia de datos de la conexión, ya que lo único que obtendrá será un flujo de datos cifrados que le resultará imposible de descifrar.
