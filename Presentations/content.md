@@ -1,11 +1,7 @@
----
-title: Title
----
-
 # WebAPI
 1. [Filter](#filter)
 
-## Introducción <name>
+## Introducción {#intro}
 
 ### ¿Qué es la programación orientada a objetos (POO)?
 Es un paradigma de programación. En el que los objetos se utilizan como metáfora para
