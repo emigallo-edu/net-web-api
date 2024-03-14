@@ -13,7 +13,7 @@
 12. [Data Transfer Object (DTO)](#data-transfer-object-dto)
 13. [Seguridad](#seguridad)
 
-## Introducción {#intro}
+## Introducción
 
 ### ¿Qué es la programación orientada a objetos (POO)?
 Es un paradigma de programación. En el que los objetos se utilizan como metáfora para
