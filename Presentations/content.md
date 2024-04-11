@@ -733,6 +733,12 @@ AutoMapper proporciona una configuración sencilla de tipos, así como pruebas s
 
 [Documentación](https://docs.automapper.org/en/stable/index.html)
 
+> Aunque la razón principal para usar un objeto de transferencia de datos es agrupar lo que serían múltiples llamadas remotas en una sola llamada, vale la pena mencionar que otra ventaja es encapsular el mecanismo de serialización para transferir datos por cable. Al encapsular la serialización de esta manera, los DTO mantienen esta lógica fuera del resto del código y también proporcionan un punto claro para cambiar la serialización si lo desea. - [Martin Fowler](https://martinfowler.com/eaaCatalog/dataTransferObject.html)
+
+<br>
+
+> Un caso en el que resulta útil utilizar algo como un DTO es cuando existe una discrepancia significativa entre el modelo de la capa de presentación y el modelo de dominio subyacente. En este caso, tiene sentido crear una fachada/puerta de enlace específica para la presentación que se asigne desde el modelo de dominio y presente una interfaz que sea conveniente para la presentación. Encaja muy bien con el modelo de presentación. Vale la pena hacerlo, pero solo vale la pena hacerlo para pantallas que no coinciden (en este caso no es trabajo adicional, ya que tendrías que hacerlo en la pantalla de todos modos). - [Martin Fowler](https://martinfowler.com/bliki/LocalDTO.html)
+
 ## Seguridad
 
 ### Autenticación
