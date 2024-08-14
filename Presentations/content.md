@@ -4,7 +4,7 @@
 3. [ASP.NET Core MVC](#aspnet-core-mvc)
 4. [Relación entre clases](#relación-entre-clases)
 5. [Entity Framework Core](#entity-framework-core)
-6. [LinQ] (#LinQ)
+6. [LinQ](#linq)
 7. [Asincronismo](#asincronismo)
 8. [Acoplamiento](#acoplamiento)
 9. [Inversión de control a inyección de dependencias](#inversión-de-control-a-inyección-de-dependencias)
