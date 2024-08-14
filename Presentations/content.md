@@ -4,14 +4,16 @@
 3. [ASP.NET Core MVC](#aspnet-core-mvc)
 4. [Relación entre clases](#relación-entre-clases)
 5. [Entity Framework Core](#entity-framework-core)
-6. [Asincronismo](#asincronismo)
-7. [Acoplamiento](#acoplamiento)
-8. [Inversión de control a inyección de dependencias](#inversión-de-control-a-inyección-de-dependencias)
-9. [Delegados](#delegados)
-10. [Middleware de ASP.NET Core](#middleware-de-ASP.NET-Core)
-11. [Filter](#filter)
-12. [Data Transfer Object (DTO)](#data-transfer-object-dto)
-13. [Seguridad](#seguridad)
+6. [LinQ] (#LinQ)
+7. [Asincronismo](#asincronismo)
+8. [Acoplamiento](#acoplamiento)
+9. [Inversión de control a inyección de dependencias](#inversión-de-control-a-inyección-de-dependencias)
+10. [Delegados](#delegados)
+11. [Middleware de ASP.NET Core](#middleware-de-ASP.NET-Core)
+12. [Filter](#filter)
+13. [Data Transfer Object (DTO)](#data-transfer-object-dto)
+14. [Pruebas unitarias](#Pruebas-de-software)
+15. [Seguridad](#seguridad)
 
 ## Introducción
 
@@ -340,6 +342,8 @@ La especialización transforma el concepto de la clase base a la clase derivada
 
 <br>
 <br>
+
+## LinQ
 
 ## Entity Framework Core
 Entity Framework (EF) Core es una versión ligera, extensible, de código abierto y multiplataforma de la popular tecnología de acceso a datos Entity Framework. <br>
@@ -738,6 +742,8 @@ AutoMapper proporciona una configuración sencilla de tipos, así como pruebas s
 <br>
 
 > Un caso en el que resulta útil utilizar algo como un DTO es cuando existe una discrepancia significativa entre el modelo de la capa de presentación y el modelo de dominio subyacente. En este caso, tiene sentido crear una fachada/puerta de enlace específica para la presentación que se asigne desde el modelo de dominio y presente una interfaz que sea conveniente para la presentación. Encaja muy bien con el modelo de presentación. Vale la pena hacerlo, pero solo vale la pena hacerlo para pantallas que no coinciden (en este caso no es trabajo adicional, ya que tendrías que hacerlo en la pantalla de todos modos). - [Martin Fowler](https://martinfowler.com/bliki/LocalDTO.html)
+
+## Pruebas de software
 
 ## Seguridad
 
