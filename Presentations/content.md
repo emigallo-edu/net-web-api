@@ -343,8 +343,6 @@ La especialización transforma el concepto de la clase base a la clase derivada
 <br>
 <br>
 
-## LinQ
-
 ## Entity Framework Core
 Entity Framework (EF) Core es una versión ligera, extensible, de código abierto y multiplataforma de la popular tecnología de acceso a datos Entity Framework. <br>
 EF Core puede actuar como asignador relacional de objetos, que se encarga de lo siguiente:
@@ -368,6 +366,8 @@ El caso común que se muestra en los ejemplos de Code First es tener DbContext c
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
     }
+
+[Documentación](https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/)
 
 ### Consultas
 Las instancias de las clases de entidad se recuperan de la base de datos por medio de Language Integrated Query (LINQ). 
@@ -465,6 +465,72 @@ Puede reemplazar el método OnModelCreating del contexto derivado y usar API flu
 También puede aplicar determinados atributos (conocidos como anotaciones de datos) a las clases y propiedades. Las anotaciones de datos reemplazarán a las convenciones, pero la configuración de la API fluida también las reemplazará.
 
 [Documentación](https://learn.microsoft.com/es-es/ef/core/modeling)
+
+### Migraciones
+EF Core proporciona dos métodos principales para mantener sincronizados el esquema de la base de datos y el modelo de EF Core. Para elegir entre los dos, decida si es el modelo de EF Core o el esquema de la base de datos el origen de confianza.
+
+- Si quiere que el modelo de EF Core sea el origen verdadero, use Migraciones. Al realizar cambios en el modelo de EF Core, este método aplica de forma incremental los cambios de esquema correspondientes a la base de datos para que siga siendo compatible con el modelo de EF Core.
+- Si quiere que el esquema de la base de datos sea el origen verdadero, use Ingeniería inversa. Este método permite aplicar la técnica de scaffolding a un elemento DbContext y a las clases de tipo de entidad mediante la aplicación de ingeniería inversa al esquema de la base de datos de un modelo de EF Core.
+
+En proyectos reales, los modelos de datos cambian a medida que se implementan características: se agregan o se quitan nuevas entidades o propiedades, y los esquemas de base de datos se deben cambiar según corresponda para mantenerlos sincronizados con la aplicación. La característica de migraciones de EF Core proporciona una manera de actualizar incrementalmente el esquema de la base de datos para mantenerla sincronizada con el modelo de datos de la aplicación al tiempo que se conservan los datos existentes en la base de datos.
+
+A nivel general, las migraciones funcionan de esta forma:
+
+Cuando se introduce un cambio en el modelo de datos:
+
+     public class Club
+    {
+        public int Id { get; set; }
+        public int Name { get; set; }
+    }
+
+el desarrollador usa herramientas de EF Core para agregar una migración correspondiente en la que se describan las actualizaciones necesarias para mantener sincronizado el esquema de la base de datos:
+
+    Add-Migration Inicial
+
+EF Core compara el modelo actual con una instantánea del modelo anterior para determinar las diferencias y genera los archivos de origen de la migración, de los que se puede realizar el seguimiento en el control de código fuente del proyecto como cualquier otro archivo de código fuente:
+
+    public partial class Inicial : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Clubs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clubs", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Clubs");
+        }
+    }
+
+
+Una vez que se ha generado una migración nueva, haya varias maneras de aplicarla a una base de datos:
+
+    Update-Database
+
+EF Core registra todas las migraciones aplicadas en una tabla de historial especial, lo que le permite saber qué migraciones se han aplicado y cuáles no:
+
+    SELECT * FROM [dbo].[_MigrationsHistory]
+
+![alt text](ef-migration.png)
+
+[Documentación](https://learn.microsoft.com/es-es/ef/core/managing-schemas/)
+
+## LinQ
 
 ## Asincronismo
 
