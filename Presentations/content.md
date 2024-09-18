@@ -380,25 +380,6 @@ Las instancias de las clases de entidad se recuperan de la base de datos por med
             .ToList();
     }
 
-### Language-Integrated Query (LINQ)
-Es un conjunto de tecnologías basadas en la integración de capacidades de consulta directamente en el lenguaje C#. Tradicionalmente, las consultas con datos se expresaban como cadenas simples sin comprobación de tipos en tiempo de compilación ni compatibilidad con IntelliSense.
-
-La parte más visible de "lenguaje integrado" de LINQ es la expresión de consulta. Las expresiones de consulta se escriben con una sintaxis de consulta declarativa. Con la sintaxis de consulta, puede realizar operaciones de filtrado, ordenación y agrupamiento en orígenes de datos con el mínimo código.
-
-    int[] scores = { 97, 92, 81, 60 };
-
-    IEnumerable<int> scoreQuery =
-        from score in scores
-        where score > 80
-        select score;
-
-    foreach (int i in scoreQuery)
-    {
-        Console.Write(i + " ");
-    }
-
-    // Output: 97 92 81
-
 ### Guardado de datos
 
 #### Enfoque 1: seguimiento de cambios y SaveChanges
@@ -530,7 +511,81 @@ EF Core registra todas las migraciones aplicadas en una tabla de historial espec
 
 [Documentación](https://learn.microsoft.com/es-es/ef/core/managing-schemas/)
 
-## LinQ
+## LinQ (Language-Integrated Query)
+
+### Métodos de extensión
+Los métodos de extensión permiten "agregar" métodos a los tipos existentes sin crear un nuevo tipo derivado, recompilar o modificar de otra manera el tipo original. Los métodos de extensión son métodos estáticos, pero se les llama como si fueran métodos de instancia en el tipo extendido.
+
+    public static class ExtensionsMethods
+    {
+        public static string AddFullStop(this string text)
+        {
+            return text + ".";
+        }
+    }
+
+Algunas consideraciones:
+- El método debe ser estático.
+- Debe estar contenido en una clase estática.
+- Debe contener un primer parámetro obligatorio que comienza con la palabra reservada 'this'. Con esto indicamos que el método aplica a ese tipo.
+
+[Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/programming-guide/classes-and-structs/extension-methods)
+
+### Consultas por métodos de extensión
+Para la mayoría de las consultas simples podemos utilizar los métodos de extensión que se encuentran en el namespace System.Linq:
+
+    Where(Expression<Func<TSource, bool>> predicate)
+    OrderBy(Expression<Func<TSource, TKey>> keySelector)
+    OrderDescendingBy(Expression<Func<TSource, TKey>> keySelector)
+    Take(int count)
+    First()
+    First(Expression<Func<TSource, bool>> predicate)
+    FirstOrDefault()
+    FirstOrDefault(Expression<Func<TSource, bool>> predicate)
+    Last()
+    Last(Expression<Func<TSource, bool>> predicate)
+    LastOrDefault()
+    LastOrDefault(Expression<Func<TSource, bool>> predicate)
+
+Hasta incluso, si deseamos hacer consultas que involucren a mas de una entidad (lo que sería un JOIN en SQL) podemos utilizar el método Include():
+
+    public async Task<List<Standing>> GetAsync(int id)
+    {
+        using (var context = new ApplicationDbContext(this._options))
+        {
+            return await context.Standings
+                .Include(x => x.Club)
+                .Where(x => x.TournamentId == id)
+                .ToListAsync();
+        }
+    }
+
+    SELECT [s].[TournamentId], [s].[ClubId], [s].[Draw], [s].[Loss], [s].[Win], [c].[Id], [c].[Address], [c].[Birthday], [c].[City], [c].[Email], [c].[Name], [c].[NumberOfPartners], [c].[Phone], [c].[StadiumName]
+    FROM [dbo].[Standings] AS [s]
+        INNER JOIN [dbo].[Clubs] AS [c] ON [s].[ClubId] = [c].[Id]
+    WHERE [s].[TournamentId] = @__id_0
+
+
+### LinQ
+Es un conjunto de tecnologías basadas en la integración de capacidades de consulta directamente en el lenguaje C#. Tradicionalmente, las consultas con datos se expresaban como cadenas simples sin comprobación de tipos en tiempo de compilación ni compatibilidad con IntelliSense.
+Una consulta es una expresión que recupera datos de un origen de datos. Los distintos orígenes de datos tienen diferentes lenguajes de consulta nativos, por ejemplo SQL para bases de datos relacionales y XQuery para XML.
+LINQ simplifica esta situación al ofrecer un modelo de lenguaje C# coherente para tipos de orígenes de datos y formatos. En una consulta LINQ, siempre se trabaja con objetos de C#.
+
+La parte más visible de "lenguaje integrado" de LINQ es la expresión de consulta. Las expresiones de consulta se escriben con una sintaxis de consulta declarativa. Con la sintaxis de consulta, puede realizar operaciones de filtrado, ordenación y agrupamiento en orígenes de datos con el mínimo código.
+
+    int[] scores = { 97, 92, 81, 60 };
+
+    IEnumerable<int> scoreQuery =
+        from score in scores
+        where score > 80
+        select score;
+
+    foreach (int i in scoreQuery)
+    {
+        Console.Write(i + " ");
+    }
+
+    // Output: 97 92 81
 
 ## Asincronismo
 
