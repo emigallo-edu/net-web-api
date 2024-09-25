@@ -530,6 +530,7 @@ Algunas consideraciones:
 - Debe contener un primer parámetro obligatorio que comienza con la palabra reservada 'this'. Con esto indicamos que el método aplica a ese tipo.
 
 [Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/programming-guide/classes-and-structs/extension-methods)
+[Ejemplo](https://github.com/emigallo-edu/net-web-api-lab/blob/main/Api/NetWebApi/Utils/ExtensionMethods.cs)
 
 ### Consultas por métodos de extensión
 Para la mayoría de las consultas simples podemos utilizar los métodos de extensión que se encuentran en el namespace System.Linq:
@@ -654,6 +655,8 @@ Si el trabajo que tiene está ligado a E/S, use async y await sin Task.Run.
 
 Si el trabajo que tiene está ligado a la CPU y le interesa la capacidad de respuesta, use async y await, pero genere el trabajo en otro subproceso con Task.Run. Si el trabajo es adecuado para la simultaneidad y el paralelismo, también debe plantearse el uso de la biblioteca TPL.
 
+[Ejemplo](https://github.com/emigallo-edu/net-web-api-lab/blob/main/Api/NetWebApi/Controllers/AsynchronousExampleController.cs)
+
 ## Acoplamiento
 Es una medida de la fuerza que un elemento está conectado a otros elementos. Estos elementos incluyen sistemas, paquetes, clases y métodos.
 
@@ -690,6 +693,8 @@ Los delegados se utilizan para pasar métodos como argumentos a otros métodos. 
     public delegate int PerformCalculation(int x, int y);
 
 [Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/programming-guide/delegates/)
+[Ejemplo](https://github.com/emigallo-edu/net-web-api-lab/blob/main/Api/NetWebApi/Controllers/DelegateExampleController.cs)
+
 
 ## Middleware de ASP.NET Core
 Es un software que se ensambla en un pipeline de una aplicación para controlar las solicitudes y las respuestas.
