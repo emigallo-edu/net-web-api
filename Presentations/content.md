@@ -588,17 +588,18 @@ La parte más visible de "lenguaje integrado" de LINQ es la expresión de consul
     // Output: 97 92 81
 
 ## Asincronismo
-
+Un código sincrónico es aquel donde cada instrucción espera a la anterior para ejecutarse mientras que un código asincrónico no espera a las instrucciones diferidas y continúa con su ejecución.
 - Definición de sincronismo según RAE: Dicho de un proceso o de su efecto: Que se desarrolla en perfecta correspondencia temporal con otro proceso o causa. 
-- Definición de asincronismo según RAE: Que carece de sincornismo.<br>
+- Definición de asincronismo según RAE: Que carece de sincronismo.
 - Definición de simultáneo según RAE: Dicho de una cosa: Que se hace u ocurre al mismo tiempo que otra.
+- Concurrencia se refiere a la habilidad de distintas partes de un programa, algoritmo, o problema de ser ejecutado en desorden o en orden parcial, sin afectar el resultado final.
 
 ### ¿Qué es la Programación Sincrónica?
 Es una técnica que se utiliza para que las computadoras realicen tareas paso a paso, en el orden en que se les dan las instrucciones.
 
 La computadora completará cada tarea antes de pasar a la siguiente. Esto hace que sea fácil de entender y de predecir lo que la computadora hará en cualquier momento dado.
 
-![](/Presentaciones/sincronismo.png)
+![](/Presentations/sincronismo.png)
 
 Sin embargo, la programación sincrónica puede ser problemática en ciertas situaciones, especialmente cuando se trata de tareas que requieren una cantidad significativa de tiempo para completarse.
 
@@ -607,7 +608,7 @@ Por ejemplo, supongamos que un programa sincrónico realiza una tarea que requie
 ### ¿Qué es la Programación Asincrónica?
 Es una forma en que un programa de computadora gestiona múltiples tareas simultáneamente en lugar de ejecutarlas una tras otra.
 
-![](/Presentaciones/asincronismo.png)
+![](/Presentations/asincronismo.png)
 
 La programación asíncrona permite que un programa continúe trabajando en otras tareas mientras espera que ocurran eventos externos, como solicitudes de red. Este enfoque puede mejorar enormemente el rendimiento y la capacidad de respuesta de un programa.
 
@@ -628,7 +629,7 @@ El núcleo de la programación asincrónica son los objetos Task y Task\<T>, que
 La palabra clave await es donde ocurre la magia. Genera control para el autor de la llamada del método que ha realizado await, y permite en última instancia una interfaz de usuario con capacidad de respuesta o un servicio flexible.
 
 
-### Piezas clave que debe comprender
+### Piezas clave que se deben comprender
 - El código asincrónico puede usarse para código tanto ligado a E/S como ligado a la CPU, pero de forma distinta en cada escenario.
 - El código asincrónico usa Task y Task\<T>, que son construcciones que se usan para modelar el trabajo que se realiza en segundo plano.
 - La palabra clave async convierte un método en un método asincrónico, lo que permite usar la palabra clave await en su cuerpo.
@@ -663,7 +664,7 @@ Nos aporta:
 - Reusable: porque es fácil de reutilizar
 - Robusta: porque no está constantemente afectada por el cambio
 
-Alto acoplamiento: es el acoplamiento a elementos que son inestables en alguna dimensión, como su interfaz, su implementación, o su mera presencia.
+Acoplamiento alto : es el acoplamiento a elementos que son inestables en alguna dimensión, como su interfaz, su implementación, o su mera presencia.
 
 Con elementos estables y generalizados rara vez es un problema. El alto acoplamiento per se no es el problema.
 
