@@ -117,8 +117,8 @@ namespace Repository.Migrations
             migrationBuilder.Sql("INSERT INTO T_CUSTOMERS(Name, Address, City) VALUES('DuniaTours', 'Diego de Leon 5', 'Neuquen')");
             migrationBuilder.Sql("INSERT INTO T_CUSTOMERS(Name, Address, City) VALUES('Focultur', 'Carrera de San Jerónimo 27', 'Santa Fe')");
             migrationBuilder.Sql("INSERT INTO T_ORDERS(Date, CustomerId, DeliveryDate) VALUES(GETDATE(), 1, GETDATE())");
-            migrationBuilder.Sql("INSERT INTO T_ORDER_ITEMS(Order_Id, Product_Id, Amount) VALUES(2, 2, 100)");
-            migrationBuilder.Sql("INSERT INTO T_ORDER_ITEMS(Order_Id, Product_Id, Amount) VALUES(2, 4, 183)");
+            migrationBuilder.Sql("INSERT INTO T_ORDER_ITEMS(Order_Id, Product_Id, Amount) VALUES((SELECT MAX(Id) FROM T_ORDERS), 2, 100)");
+            migrationBuilder.Sql("INSERT INTO T_ORDER_ITEMS(Order_Id, Product_Id, Amount) VALUES((SELECT MAX(Id) FROM T_ORDERS), 4, 183)");
         }
 
         /// <inheritdoc />
