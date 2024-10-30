@@ -12,8 +12,9 @@
 11. [Middleware de ASP.NET Core](#middleware-de-asp.net-core)
 12. [Filter](#filter)
 13. [Data Transfer Object (DTO)](#data-transfer-object-dto)
-14. [Pruebas unitarias](#Pruebas-de-software)
-15. [Seguridad](#seguridad)
+14. [Arquitectura] (#arquitectura)
+15. [Pruebas unitarias](#Pruebas-de-software)
+16. [Seguridad](#seguridad)
 
 ## Introducción
 
@@ -858,6 +859,7 @@ Para ello, puede definir un objeto de transferencia de datos (DTO). Un DTO es un
 [Documentación](https://learn.microsoft.com/es-es/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5)
 
 ### Auto Mapper
+
 AutoMapper es un mapeador de objetos. El mapeo objeto-objeto funciona transformando un objeto de entrada de un tipo en un objeto de salida de un tipo diferente.
 
 AutoMapper proporciona una configuración sencilla de tipos, así como pruebas sencillas de asignaciones. La verdadera pregunta puede ser "¿por qué utilizar el mapeo objeto-objeto?" El mapeo puede ocurrir en muchos lugares de una aplicación, pero principalmente en los límites entre capas, como entre las capas UI/Dominio o las capas Servicio/Dominio. Las preocupaciones de una capa a menudo entran en conflicto con las preocupaciones de otra, por lo que el mapeo objeto-objeto conduce a modelos segregados, donde las preocupaciones por cada capa pueden afectar solo a los tipos de esa capa.
@@ -870,7 +872,92 @@ AutoMapper proporciona una configuración sencilla de tipos, así como pruebas s
 
 > Un caso en el que resulta útil utilizar algo como un DTO es cuando existe una discrepancia significativa entre el modelo de la capa de presentación y el modelo de dominio subyacente. En este caso, tiene sentido crear una fachada/puerta de enlace específica para la presentación que se asigne desde el modelo de dominio y presente una interfaz que sea conveniente para la presentación. Encaja muy bien con el modelo de presentación. Vale la pena hacerlo, pero solo vale la pena hacerlo para pantallas que no coinciden (en este caso no es trabajo adicional, ya que tendrías que hacerlo en la pantalla de todos modos). - [Martin Fowler](https://martinfowler.com/bliki/LocalDTO.html)
 
+## Arquitectura
+
+### ¿Qué es una aplicación monolítica?
+
+Una aplicación monolítica es aquella completamente independiente, en términos de su comportamiento. Puede interactuar con otros servicios o almacenes de datos en el transcurso de sus operaciones, pero el núcleo de su comportamiento se ejecuta dentro de su propio proceso y toda la aplicación normalmente se implementa como una única unidad.
+Ej: los procesos que observamos dentro del Administrador de Tareas del sistema operativo.
+
+#### Aplicaciones todo en uno
+
+El menor número posible de proyectos para una arquitectura de aplicación es uno. En esta arquitectura, toda la lógica de la aplicación está contenida en un solo proyecto, se compila en un único ensamblado y se implementa como una sola unidad.
+Un proyecto nuevo de ASP.NET Core empieza como un simple monolito "todo en uno". Contiene todo el comportamiento de la aplicación, incluida la lógica de presentación, de negocios y de acceso a datos.
+
+![](vs_soluction_structure_togheter.png)
+
+Aunque es simple, la solución monolítica de un solo proyecto tiene algunas desventajas:
+- A medida que aumenta el tamaño y la complejidad del proyecto, el número de archivos y carpetas también seguirá creciendo.
+- Los intereses de la interfaz de usuario (IU) (modelos, vistas, controladores) residen en varias carpetas, que no están agrupadas alfabéticamente. Este problema empeora cuando se agregan otras construcciones de nivel de la interfaz de usuario, como filtros o ModelBinders, en sus propias carpetas.
+- La lógica de negocios se distribuye entre las carpetas Modelos y Servicios, y no hay ninguna indicación clara de qué clases de qué carpetas deben depender de otras.
+- Esta falta de organización en el nivel del proyecto suele dar lugar a código espagueti.
+
+Para resolver estos problemas, las aplicaciones suelen evolucionar a soluciones de varios proyectos, donde se considera que cada proyecto reside en una determinada capa de la aplicación.
+
+### ¿Qué son las capas?
+
+Cuando aumenta la complejidad de las aplicaciones, una manera de administrarla consiste en dividir la aplicación según sus responsabilidades o intereses. Este enfoque sigue el principio de separación de intereses y puede ayudar a mantener organizado un código base que crece para que los desarrolladores puedan encontrar fácilmente dónde se implementa una función determinada. Pero la arquitectura en capas ofrece una serie de ventajas que van más allá de la simple organización del código.
+
+Al organizar el código en capas, la funcionalidad común de bajo nivel se puede reutilizar en toda la aplicación. Esta reutilización es beneficiosa ya que significa escribir menos código y puede permitir que la aplicación se estandarice en una sola implementación, siguiendo el principio Una vez y solo una [DRY]()).
+
+Con una arquitectura en capas, las aplicaciones pueden aplicar restricciones sobre qué capas se pueden comunicar con otras capas. Esta arquitectura permite lograr la **encapsulación**. Cuando se cambia o reemplaza una capa, solo deberían verse afectadas aquellas capas que funcionan con ella. Mediante la limitación de qué capas dependen de otras, se puede mitigar el impacto de los cambios para que un único cambio no afecte a toda la aplicación.
+
+![](vs_soluction_structure_layers.png)
+
+<br>
+
+En la siguiente figura se muestra la organización más común de la lógica de la aplicación en capas.
+Estas capas se suelen abreviar como UI (interfaz de usuario), BLL (capa de lógica de negocios) y DAL (capa de acceso a datos). Con esta arquitectura, los usuarios realizan solicitudes a través de la capa de interfaz de usuario, que interactúa con la capa BLL. BLL, a su vez, puede llamar a DAL para las solicitudes de acceso de datos. La capa de interfaz de usuario no debe realizar solicitudes directamente a DAL, ni debe interactuar con la persistencia de forma directa a través de otros medios. Del mismo modo, BLL solo debe interactuar con la persistencia a través de DAL. De este modo, cada capa tiene su propia responsabilidad conocida.
+
+![](layers_1.png)
+
+#### Implementación simple de una aplicación web de Azure
+
+![](layers_advance.png)
+
+### Arquitectura Limpia
+
+Las aplicaciones que siguen el principio de **inversión de dependencias**, así como los principios de diseño controlado por dominios (DDD), tienden a llegar a una arquitectura similar. Esta arquitectura ha pasado por muchos nombres con los años. Uno de los primeros nombres fue Arquitectura hexagonal, seguido por Puertos y adaptadores. Más recientemente, se ha citado como arquitectura cebolla o arquitectura limpia. Este último nombre, Arquitectura limpia, es el que se usa para esta arquitectura en este libro electrónico.
+
+La arquitectura limpia coloca el modelo de lógica de negocios y aplicación en el centro de la aplicación. En lugar de tener lógica de negocios que depende del acceso a datos o de otros aspectos de infraestructura, esta dependencia se invierte: los detalles de la infraestructura y la implementación dependen del núcleo de la aplicación. Esta función se logra mediante la definición de **abstracciones** o interfaces, en el núcleo de la aplicación, que después se implementan mediante tipos definidos en el nivel de infraestructura. Una forma habitual de visualizar esta arquitectura es usar una serie de círculos concéntricos, similares a una cebolla. 
+
+![](layers_onion.png)
+
+En la siguiente figura se muestra un diagrama de capas horizontal más tradicional que refleja mejor la dependencia entre la interfaz de usuario y otras capas.
+
+![](layers_2.png)
+
+### Proyecto de pruebas
+
+![](layers_test.png)
+
+[Fuente](https://learn.microsoft.com/es-es/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)
+
 ## Pruebas de software
+
+#### ¿Qué son las pruebas de software?
+
+Son el proceso de evaluar y verificar que un producto o aplicación de software hace lo que se supone que debe hacer. Entre los beneficios de unas buenas pruebas se incluyen la prevención de errores y la mejora del rendimiento.
+
+#### Algunos tipos de pruebas
+
+- Pruebas de aceptación: Verifican si todo el sistema funciona según lo previsto.
+- Pruebas de integración: Garantizan que los componentes o las funciones del software funcionan conjuntamente.
+- Pruebas unitarias: Validan que cada unidad de software funciona según lo esperado. Una unidad es el componente comprobable más pequeño de una aplicación.
+- Pruebas funcionales: Comprueban las funciones emulando escenarios de negocio, basándose en los requisitos funcionales. Las pruebas de caja negra son una forma habitual de verificar las funciones.
+- Pruebas de rendimiento: Comprueban cómo funciona el software bajo diferentes cargas de trabajo. Las pruebas de carga, por ejemplo, se utilizan para evaluar el rendimiento en condiciones de carga reales.
+- Pruebas de regresión: Comprueban si las nuevas características rompen o degradan la funcionalidad. Las pruebas de cordura pueden utilizarse para verificar menús, funciones y comandos a nivel superficial, cuando no hay tiempo para una prueba de regresión completa.
+- Pruebas de estrés: Prueban cuánta tensión puede soportar el sistema antes de fallar. Las pruebas de estrés se consideran un tipo de pruebas no funcionales.
+
+#### Algunos conceptos
+
+- Caracrerística (Feature): unidad de funcionalidad que puede ser construida en la evolución de un programa informatico.
+- Sujeto bajo Prueba (Subject under Test, SUT): bloque de código que implementa la caracteristica que estemos probando. El SUT se define siempre desde la perspectiva de la prueba.
+- Componente del que se depende (Depended-on-Component, DOC): partes de la aplicación que no estamos verificando en una prueba en particular de las que depende el SUT (por ejemplo, objetos de otra clase alque el SUT envia mensajes).
+
+![](feature_sut_doc.png){style="display: block; margin: 0 auto" }
+
+- La Cobertura es la medida porcentual del grado en que el código fuente de una aplicaciòn ha sido ejercítado durante las pruebas determinando indirecta y supuestamente la calidad de las pruebas que se lleven a cabo.
 
 ## Seguridad
 
