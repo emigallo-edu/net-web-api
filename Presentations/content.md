@@ -12,7 +12,7 @@
 11. [Middleware de ASP.NET Core](#middleware-de-asp.net-core)
 12. [Filter](#filter)
 13. [Data Transfer Object (DTO)](#data-transfer-object-dto)
-14. [Arquitectura] (#arquitectura)
+14. [Arquitectura](#arquitectura)
 15. [Pruebas unitarias](#Pruebas-de-software)
 16. [Seguridad](#seguridad)
 
