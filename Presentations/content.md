@@ -955,9 +955,15 @@ Son el proceso de evaluar y verificar que un producto o aplicación de software 
 - Sujeto bajo Prueba (Subject under Test, SUT): bloque de código que implementa la caracteristica que estemos probando. El SUT se define siempre desde la perspectiva de la prueba.
 - Componente del que se depende (Depended-on-Component, DOC): partes de la aplicación que no estamos verificando en una prueba en particular de las que depende el SUT (por ejemplo, objetos de otra clase alque el SUT envia mensajes).
 
-![](feature_sut_doc.png){style="display: block; margin: 0 auto" }
+![](feature_sut_doc.png)
 
 - La Cobertura es la medida porcentual del grado en que el código fuente de una aplicaciòn ha sido ejercítado durante las pruebas determinando indirecta y supuestamente la calidad de las pruebas que se lleven a cabo.
+
+<br>
+
+![](package_diagram_solution.png)
+<br>
+![](package_diagram_test.png)
 
 ## Seguridad
 
