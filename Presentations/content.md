@@ -590,33 +590,9 @@ La parte más visible de "lenguaje integrado" de LINQ es la expresión de consul
     // Output: 97 92 81
 
 ## Asincronismo
-Un código sincrónico es aquel donde cada instrucción espera a la anterior para ejecutarse mientras que un código asincrónico no espera a las instrucciones diferidas y continúa con su ejecución.
-- Definición de sincronismo según RAE: Dicho de un proceso o de su efecto: Que se desarrolla en perfecta correspondencia temporal con otro proceso o causa. 
-- Definición de asincronismo según RAE: Que carece de sincronismo.
-- Definición de simultáneo según RAE: Dicho de una cosa: Que se hace u ocurre al mismo tiempo que otra.
-- Concurrencia se refiere a la habilidad de distintas partes de un programa, algoritmo, o problema de ser ejecutado en desorden o en orden parcial, sin afectar el resultado final.
+Los conceptos generales (sincronismo, asincronismo, concurrencia, paralelismo, trabajo ligado a E/S vs. a la CPU) están explicados, con un ejemplo fuera de la programación, en el blog: [Asincronismo](https://github.com/emigallo-edu/blog-tech/blob/main/docs/asynchronism/content.md).
 
-### ¿Qué es la Programación Sincrónica?
-Es una técnica que se utiliza para que las computadoras realicen tareas paso a paso, en el orden en que se les dan las instrucciones.
-
-La computadora completará cada tarea antes de pasar a la siguiente. Esto hace que sea fácil de entender y de predecir lo que la computadora hará en cualquier momento dado.
-
-![](/Presentations/sincronismo.png)
-
-Sin embargo, la programación sincrónica puede ser problemática en ciertas situaciones, especialmente cuando se trata de tareas que requieren una cantidad significativa de tiempo para completarse.
-
-Por ejemplo, supongamos que un programa sincrónico realiza una tarea que requiere esperar una respuesta de un servidor remoto. El programa quedará a la espera de la respuesta y no podrá hacer nada más hasta que se devuelva la respuesta. Esto se conoce como bloqueo y puede hacer que una aplicación no responda o aparezca como "congelada" para el usuario.
-
-### ¿Qué es la Programación Asincrónica?
-Es una forma en que un programa de computadora gestiona múltiples tareas simultáneamente en lugar de ejecutarlas una tras otra.
-
-![](/Presentations/asincronismo.png)
-
-La programación asíncrona permite que un programa continúe trabajando en otras tareas mientras espera que ocurran eventos externos, como solicitudes de red. Este enfoque puede mejorar enormemente el rendimiento y la capacidad de respuesta de un programa.
-
-Por ejemplo, mientras un programa recupera los datos de un servidor remoto, puede seguir ejecutando otras tareas como responder a las entradas del usuario.
-
-[Documentación](https://learn.microsoft.com/es-es/dotnet/csharp/asynchronous-programming/)
+[Documentación de C#](https://learn.microsoft.com/es-es/dotnet/csharp/asynchronous-programming/)
 
 ### Task, await, async
 Si tiene cualquier necesidad ligada a E/S (por ejemplo, solicitar datos de una red, acceder a una base de datos o leer y escribir un sistema de archivos), deberá usar la programación asincrónica. También podría tener código ligado a la CPU, como realizar un cálculo costoso, que también es un buen escenario para escribir código asincrónico.
@@ -656,7 +632,7 @@ Si el trabajo que tiene está ligado a E/S, use async y await sin Task.Run.
 
 Si el trabajo que tiene está ligado a la CPU y le interesa la capacidad de respuesta, use async y await, pero genere el trabajo en otro subproceso con Task.Run. Si el trabajo es adecuado para la simultaneidad y el paralelismo, también debe plantearse el uso de la biblioteca TPL.
 
-[Ejemplo](https://github.com/emigallo-edu/net-web-api-lab/blob/main/Api/NetWebApi/Controllers/AsynchronousExampleController.cs)
+[Ejemplo](https://github.com/emigallo-edu/liga-libre-api/blob/main/Api/Controllers/AsynchronousExampleController.cs)
 
 ## Acoplamiento
 Es una medida de la fuerza que un elemento está conectado a otros elementos. Estos elementos incluyen sistemas, paquetes, clases y métodos.
